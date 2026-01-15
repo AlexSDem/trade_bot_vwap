@@ -19,7 +19,8 @@ def get_token() -> str:
     token = os.environ.get("INVEST_TOKEN")
     if not token:
         raise RuntimeError(
-            "Не задан INVEST_TOKEN. В PowerShell выполни:\n"
+            "Не задан INVEST_TOKEN.\n"
+            "В PowerShell выполни:\n"
             '  setx INVEST_TOKEN "ТВОЙ_ТОКЕН"\n'
             "Затем открой новое окно PowerShell и запусти снова."
         )
@@ -33,6 +34,7 @@ def main():
     strategy = Strategy(cfg["strategy"])
     risk = RiskManager(cfg["risk"])
 
+    # Пауза между итерациями цикла
     sleep_sec = float(cfg.get("runtime", {}).get("sleep_sec", 55))
     error_sleep_sec = float(cfg.get("runtime", {}).get("error_sleep_sec", 10))
 
@@ -46,26 +48,26 @@ def main():
         broker.log(f"[INFO] Tradeable FIGIs: {figis}")
 
         if not figis:
-            broker.log("[ERROR] Не нашёл подходящих инструментов под max_lot_cost_rub. Увеличь лимит или измени tickers.")
+            broker.log("[ERROR] Нет подходящих инструментов под max_lot_cost_rub. Увеличь лимит или измени tickers.")
             return
 
         while True:
             try:
                 ts = now()
 
-                # Если не торговое время — только flatten при необходимости и ждём
+                # Вне торгового окна — только закрываемся при необходимости
                 if not broker.is_trading_time(ts, cfg["schedule"]):
                     broker.flatten_if_needed(account_id, cfg["schedule"])
                     time.sleep(min(10, sleep_sec))
                     continue
 
-                # Если пора закрываться — закрываемся и ждём
+                # Если время закрываться — закрываемся
                 if broker.flatten_due(ts, cfg["schedule"]):
                     broker.flatten_if_needed(account_id, cfg["schedule"])
                     time.sleep(min(10, sleep_sec))
                     continue
 
-                # Проверка дневного лимита
+                # Дневной лок — не торгуем, но продолжаем жить
                 if risk.day_locked():
                     time.sleep(30)
                     continue
@@ -73,38 +75,41 @@ def main():
                 entries_allowed = broker.new_entries_allowed(ts, cfg["schedule"])
 
                 for figi in figis:
-                    # синхронизируем состояние по позициям/заявкам
+                    # 1) синхронизируем состояние (позиции/заявки + entry bookkeeping)
                     broker.sync_state(account_id, figi)
 
-                    # получаем свечи
+                    # 2) берём свечи
                     candles = broker.get_last_candles_1m(figi, lookback_minutes=cfg["strategy"]["lookback_minutes"])
                     if candles is None or len(candles) < 30:
                         continue
 
+                    # 3) получаем сигнал (учитывает state для тейка/стопа/тайм-стопа)
                     signal = strategy.make_signal(figi, candles, broker.state)
-                    # signal: {"action": "BUY"/"SELL"/"HOLD", "price": float, "reason": str}
+                    action = signal.get("action", "HOLD")
 
-                    # Если новые входы запрещены — игнорируем BUY (но выходы разрешаем)
-                    if signal["action"] == "BUY" and not entries_allowed:
-                        continue
+                    # 4) исполняем
+                    if action == "BUY":
+                        # после stop_new_entries новые входы запрещены
+                        if not entries_allowed:
+                            continue
 
-                    # риск-фильтры на вход
-                    if signal["action"] == "BUY":
+                        # риск-фильтры только на вход
                         if not risk.allow_new_trade(broker.state, account_id, figi):
                             continue
+
                         ok = broker.place_limit_buy(account_id, figi, signal["price"])
                         if ok:
-                            broker.log(f"[SIGNAL] BUY {figi} @ {signal['price']} | {signal['reason']}")
+                            broker.log(f"[SIGNAL] BUY {figi} @ {signal['price']} | {signal.get('reason', '')}")
 
-                    elif signal["action"] == "SELL":
-                        # закрытие позиции (тейк/стоп/тайм-стоп)
+                    elif action == "SELL":
+                        # выход разрешён всегда (если есть позиция)
                         ok = broker.place_limit_sell_to_close(account_id, figi, signal["price"])
                         if ok:
-                            broker.log(f"[SIGNAL] SELL {figi} @ {signal['price']} | {signal['reason']}")
+                            broker.log(f"[SIGNAL] SELL {figi} @ {signal['price']} | {signal.get('reason', '')}")
 
-                # Дневной "предохранитель": используем cashflow (защитный тормоз)
-                cashflow = broker.calc_day_cashflow(account_id)
-                risk.update_day_pnl(cashflow)
+                # 5) дневной "предохранитель" — cashflow как защитная метрика
+                day_metric = broker.calc_day_cashflow(account_id)
+                risk.update_day_pnl(day_metric)
 
                 time.sleep(sleep_sec)
 
