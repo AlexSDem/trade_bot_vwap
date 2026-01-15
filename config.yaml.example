@@ -3,9 +3,17 @@ broker:
   currency: "rub"
   log_file: "logs/bot.log"
 
+  # Надёжность API:
+  retry_tries: 3
+  retry_sleep_min: 1.0
+  retry_sleep_max: 10.0
+
+  # Только для sandbox: сколько "виртуальных рублей" закинуть на счёт при создании
+  sandbox_pay_in_rub: 100000.0
+
 universe:
   tickers: ["SBER", "GAZP", "LKOH", "GMKN", "TATN", "NVTK", "ROSN", "ALRS"]  # можно менять
-  exchange: "MOEX"             # фильтр по площадке (если вернёт API)
+  exchange: "MOEX"             # сейчас не используется, оставлено на будущее
 
 schedule:
   tz: "Europe/Moscow"
@@ -26,3 +34,7 @@ risk:
   max_trades_per_day: 3
   max_positions: 1
   max_active_orders_per_figi: 1
+
+runtime:
+  sleep_sec: 55                # пауза между итерациями цикла (пулл раз в минуту)
+  error_sleep_sec: 10          # пауза после ошибок
