@@ -81,7 +81,7 @@ def main():
                     if candles is None or len(candles) < 30:
                         continue
 
-                    signal = strategy.make_signal(candles)
+                    signal = strategy.make_signal(figi, candles, broker.state)
                     # signal: {"action": "BUY"/"SELL"/"HOLD", "price": float, "reason": str}
 
                     # Если новые входы запрещены — игнорируем BUY (но выходы разрешаем)
