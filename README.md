@@ -27,7 +27,7 @@
 ├── logs/
 │   └── .gitkeep
 └── README.md
-
+```
 
 ## Быстрый старт (Windows)
 1️⃣ Подготовка окружения
@@ -35,26 +35,36 @@
 Установи Python 3.10+
 
 Проверь:
+```text
 python --version
 pip --version
+```
 
 2️⃣ Установка зависимостей
+```text
 pip install -r requirements.txt
+```
 
 3️⃣ Настройка API-токена
 
 В PowerShell один раз:
+```text
 setx INVEST_TOKEN "ТВОЙ_API_ТОКЕН_T_INVEST"
+```
 
 Закрой PowerShell, открой заново и проверь:
+```text
 echo $env:INVEST_TOKEN
+```
 
 ⚠️ Никогда не добавляй токен в код или конфиг.
 
 4️⃣ Конфигурация
 
 Скопируй шаблон:
+```text
 copy config.yaml.example config.yaml
+```
 
 По умолчанию:
 - используется sandbox
@@ -62,16 +72,22 @@ copy config.yaml.example config.yaml
 - позиции не переносятся через ночь
 
 5️⃣ Запуск
+```text
 python main.py
+```
 
 Остановка:
+```text
 Ctrl + C
+```
 
 ## Sandbox и боевой режим
 
 По умолчанию в config.yaml:
+```text
 broker:
   use_sandbox: true
+```
 
 ➡️ РЕКОМЕНДУЕТСЯ:
 1. Прогнать бота 2–3 торговых дня в sandbox
