@@ -29,7 +29,26 @@ class BotState:
         fs = self.figi.get(figi)
         return bool(fs and fs.position_lots > 0)
 
+    def has_active_order(self, figi: str) -> bool:
+        fs = self.figi.get(figi)
+        return bool(fs and fs.active_order_id)
+
+    def open_positions_count(self) -> int:
+        return sum(1 for fs in self.figi.values() if fs.position_lots > 0)
+
+    def clear_entry(self, figi: str):
+        fs = self.get(figi)
+        fs.entry_price = None
+        fs.entry_time = None
+
     def reset_day(self, day_key: str):
         self.current_day = day_key
         self.trades_today = 0
         # entry_* не трогаем — это состояние позиции, не дня
+
+    def touch_day(self, day_key: str):
+        """
+        Если день изменился — сбрасываем дневные счётчики.
+        """
+        if self.current_day != day_key:
+            self.reset_day(day_key)
