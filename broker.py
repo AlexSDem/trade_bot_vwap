@@ -319,37 +319,55 @@ class Broker:
 
     # ---------- orders / positions ----------
     def sync_state(self, account_id: str, figi: str):
-        """
-        Updates:
-          - open position lots for figi
-          - active order id for figi (first one for MVP)
-        """
-        self._ensure_day_rollover()
-        if figi not in self.state.figi:
-            self.state.figi[figi] = FigiState()
+    """
+    Updates:
+      - open position lots for figi
+      - active order id for figi
+      - entry_price / entry_time bookkeeping (MVP)
+    """
+    self._ensure_day_rollover()
+    fs = self.state.get(figi)  # <-- используем BotState.get()
 
-        fs = self.state.figi[figi]
+    # --- positions ---
+    prev_lots = fs.position_lots  # запоминаем, что было до синка
+    new_lots = prev_lots
 
-        # positions
-        try:
-            pos = self._call(self.client.operations.get_positions, account_id=account_id)
-            lots = 0
-            for sec in pos.securities:
-                if sec.figi == figi:
-                    # balance is a Quotation-like numeric in SDK; convert safely
-                    lots = int(quotation_to_decimal(sec.balance))
-                    break
-            fs.position_lots = lots
-        except Exception as e:
-            self.log(f"[WARN] get_positions failed: {e}")
+    try:
+        pos = self._call(self.client.operations.get_positions, account_id=account_id)
+        lots = 0
+        for sec in pos.securities:
+            if sec.figi == figi:
+                lots = int(quotation_to_decimal(sec.balance))
+                break
+        new_lots = lots
+        fs.position_lots = new_lots
+    except Exception as e:
+        self.log(f"[WARN] get_positions failed: {e}")
 
-        # active orders
-        try:
-            orders = self._call(self.client.orders.get_orders, account_id=account_id).orders
-            active = [o for o in orders if o.figi == figi]
-            fs.active_order_id = active[0].order_id if active else None
-        except Exception as e:
-            self.log(f"[WARN] get_orders failed: {e}")
+    # --- active orders ---
+    try:
+        orders = self._call(self.client.orders.get_orders, account_id=account_id).orders
+        active = [o for o in orders if o.figi == figi]
+        fs.active_order_id = active[0].order_id if active else None
+    except Exception as e:
+        self.log(f"[WARN] get_orders failed: {e}")
+
+    # --- entry bookkeeping (MVP) ---
+    # 1) позиция закрылась: >0 -> 0  => сбрасываем entry данные
+    if prev_lots > 0 and new_lots == 0:
+        fs.entry_price = None
+        fs.entry_time = None
+
+    # 2) позиция открылась: 0 -> >0 => фиксируем примерный entry, если не задан
+    if prev_lots == 0 and new_lots > 0:
+        if fs.entry_time is None:
+            fs.entry_time = now()
+        if fs.entry_price is None:
+            # Для MVP берём последнюю цену как приближение.
+            # Если last_price не доступен — оставим None, стратегия подхватит позже.
+            last = self.get_last_price(figi)
+            if last is not None:
+                fs.entry_price = float(last)
 
     def has_open_position(self, figi: str) -> bool:
         fs = self.state.figi.get(figi)
