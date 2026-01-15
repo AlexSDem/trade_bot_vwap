@@ -1,0 +1,16 @@
+# secrets
+config.yaml
+.env
+
+# logs
+logs/
+*.log
+
+# python
+__pycache__/
+*.pyc
+.venv/
+
+# IDE
+.vscode/
+.idea/
