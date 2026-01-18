@@ -46,6 +46,7 @@ def main():
 
         figis = broker.pick_tradeable_figis(cfg["universe"], max_lot_cost=cfg["risk"]["max_lot_cost_rub"])
         broker.log(f"[INFO] Tradeable FIGIs: {figis}")
+        last_heartbeat = 0.0
 
         if not figis:
             broker.log("[ERROR] Нет подходящих инструментов под max_lot_cost_rub. Увеличь лимит или измени tickers.")
@@ -54,6 +55,10 @@ def main():
         while True:
             try:
                 ts = now()
+                # heartbeat раз в минуту
+                if time.time() - last_heartbeat >= 60:
+                    broker.log(f"[HB] alive | utc={ts.isoformat()} | entries_allowed={broker.new_entries_allowed(ts, cfg['schedule'])}")
+                    last_heartbeat = time.time()
 
                 # Вне торгового окна — только закрываемся при необходимости
                 if not broker.is_trading_time(ts, cfg["schedule"]):
