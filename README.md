@@ -1,5 +1,11 @@
 # Intraday Trading Bot (T-Invest)
 
+1. git clone https://github.com/AlexSDem/trade_bot
+2. cd trade_bot
+3. pip install -r requirements.txt
+4. copy config.yaml.example config.yaml
+5. python main.py
+
 Простой внутридневной торговый бот для акций РФ.
 
 **Особенности:**
