@@ -501,6 +501,8 @@ class Broker:
                 reason="partial_fill",
                 meta={"lots_requested": lots_requested},
             )
+            self.tg.send(f"✅ FILL {self._ticker_for_figi(figi)} {side} lots={lots_executed} price={avg_price}", throttle_sec=0)
+            self.tg.send(f"⛔ REJECT {self._ticker_for_figi(figi)} {side} status={status}", throttle_sec=1)
 
         final_statuses = {
             "EXECUTION_REPORT_STATUS_FILL",
