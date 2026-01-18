@@ -2,6 +2,7 @@ broker:
   use_sandbox: true            # сначала true, потом переключишь на false
   currency: "rub"
   log_file: "logs/bot.log"
+  class_code: "TQBR
 
   # Надёжность API:
   retry_tries: 3
