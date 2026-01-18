@@ -465,42 +465,42 @@ class Broker:
                 # MVP: sell at last (rounded to step)
                 self.place_limit_sell_to_close(account_id, figi, price=last)
 
-        def calc_day_cashflow(self, account_id: str) -> float:
-            """
-            MVP защитная метрика дня:
-            суммарный денежный поток (cashflow) за сегодня в выбранной валюте.
-    
-            Используется ТОЛЬКО как дневной предохранитель,
-            это не точный PnL.
-            """
-            try:
-                tz = ZoneInfo("Europe/Moscow")
-                today_local = datetime.now(tz=tz).date()
-    
-                from_local = datetime.combine(
-                    today_local, datetime.min.time(), tzinfo=tz
-                )
-                to_local = datetime.combine(
-                    today_local, datetime.max.time(), tzinfo=tz
-                )
-    
-                from_utc = from_local.astimezone(ZoneInfo("UTC"))
-                to_utc = to_local.astimezone(ZoneInfo("UTC"))
-    
-                ops = self._call(
-                    self.client.operations.get_operations,
-                    account_id=account_id,
-                    from_=from_utc,
-                    to=to_utc,
-                )
-    
-                total = 0.0
-                for op in ops.operations:
-                    if op.payment.currency == self.currency:
-                        total += float(quotation_to_decimal(op.payment))
-    
-                return total
-    
-            except Exception as e:
-                self.log(f"[WARN] calc_day_cashflow failed: {e}")
-                return 0.0
+    def calc_day_cashflow(self, account_id: str) -> float:
+        """
+        MVP защитная метрика дня:
+        суммарный денежный поток (cashflow) за сегодня в выбранной валюте.
+
+        Используется ТОЛЬКО как дневной предохранитель,
+        это не точный PnL.
+        """
+        try:
+            tz = ZoneInfo("Europe/Moscow")
+            today_local = datetime.now(tz=tz).date()
+
+            from_local = datetime.combine(
+                today_local, datetime.min.time(), tzinfo=tz
+            )
+            to_local = datetime.combine(
+                today_local, datetime.max.time(), tzinfo=tz
+            )
+
+            from_utc = from_local.astimezone(ZoneInfo("UTC"))
+            to_utc = to_local.astimezone(ZoneInfo("UTC"))
+
+            ops = self._call(
+                self.client.operations.get_operations,
+                account_id=account_id,
+                from_=from_utc,
+                to=to_utc,
+            )
+
+            total = 0.0
+            for op in ops.operations:
+                if op.payment.currency == self.currency:
+                    total += float(quotation_to_decimal(op.payment))
+
+            return total
+
+        except Exception as e:
+            self.log(f"[WARN] calc_day_cashflow failed: {e}")
+            return 0.0
