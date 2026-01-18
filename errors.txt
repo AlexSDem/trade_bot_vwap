@@ -1,0 +1,31 @@
+[INFO] No sandbox accounts. Creating one...
+[INFO] Created sandbox account: 03e0156b-0554-4ea6-ab78-9aea6d687934
+[WARN] Sandbox pay-in failed: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[INFO] Account: 03e0156b-0554-4ea6-ab78-9aea6d687934 (sandbox=True)
+fb6e4d4a33325ed3d6710d259c26e04f ShareBy NOT_FOUND 50002
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='fb6e4d4a33325ed3d6710d259c26e04f', ratelimit_limit='200, 200;w=60', ratelimit_remaining=198, ratelimit_reset=25, message='Instrument not found'))
+fef5c0950038f92b5cb2c019fe0bec70 ShareBy NOT_FOUND 50002
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='fef5c0950038f92b5cb2c019fe0bec70', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=24, message='Instrument not found'))
+c9068e955d82bb5c0f754ea59cba4b01 ShareBy NOT_FOUND 50002
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='c9068e955d82bb5c0f754ea59cba4b01', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=22, message='Instrument not found'))
+[WARN] share_by failed for SBER (BBG00XR1B5V7): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='c9068e955d82bb5c0f754ea59cba4b01', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=22, message='Instrument not found'))
+bf82aead0996c625108b19b20d5dc3c0 ShareBy NOT_FOUND 50002
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='bf82aead0996c625108b19b20d5dc3c0', ratelimit_limit='200, 200;w=60', ratelimit_remaining=190, ratelimit_reset=22, message='Instrument not found'))
+b373560423625b8db3e3d220b64f509d ShareBy NOT_FOUND 50002
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='b373560423625b8db3e3d220b64f509d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=189, ratelimit_reset=21, message='Instrument not found'))
+a857ff60b11a9ca2172f5f02572f275c ShareBy NOT_FOUND 50002
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='a857ff60b11a9ca2172f5f02572f275c', ratelimit_limit='200, 200;w=60', ratelimit_remaining=188, ratelimit_reset=19, message='Instrument not found'))
+[WARN] share_by failed for GMKN (FUTGMKN06230): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='a857ff60b11a9ca2172f5f02572f275c', ratelimit_limit='200, 200;w=60', ratelimit_remaining=188, ratelimit_reset=19, message='Instrument not found'))
+bffd1a522dce031979428a8fc62b6d05 ShareBy NOT_FOUND 50002
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='bffd1a522dce031979428a8fc62b6d05', ratelimit_limit='200, 200;w=60', ratelimit_remaining=182, ratelimit_reset=18, message='Instrument not found'))
+dc6f6fab22b584a115d6c649e73e508d ShareBy NOT_FOUND 50002
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='dc6f6fab22b584a115d6c649e73e508d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=181, ratelimit_reset=17, message='Instrument not found'))
+ecc179336e538803fb2a0b53ff931a05 ShareBy NOT_FOUND 50002
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='ecc179336e538803fb2a0b53ff931a05', ratelimit_limit='200, 200;w=60', ratelimit_remaining=180, ratelimit_reset=15, message='Instrument not found'))
+[WARN] share_by failed for ROSN (FUTROSN09240): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50002', Metadata(tracking_id='ecc179336e538803fb2a0b53ff931a05', ratelimit_limit='200, 200;w=60', ratelimit_remaining=180, ratelimit_reset=15, message='Instrument not found'))
+[OK] GAZP TCS907661625 lot=1 lot_cost≈0.00
+[SKIP] LKOH lot_cost≈5398.00 > 3500.00
+[OK] TATN BBG004RVFFC0 lot=1 lot_cost≈562.20
+[OK] NVTK BBG000QY6FL3 lot=1 lot_cost≈124.70
+[OK] ALRS BBG004S68B31 lot=10 lot_cost≈415.20
+[INFO] Tradeable FIGIs: ['TCS907661625', 'BBG004RVFFC0', 'BBG000QY6FL3', 'BBG004S68B31']
