@@ -1,6 +1,7 @@
 broker:
   use_sandbox: true
   currency: "rub"
+  min_sandbox_cash_rub: 12000
   log_file: "logs/bot.log"
   class_code: "TQBR"
   trades_csv: "logs/trades.csv"
