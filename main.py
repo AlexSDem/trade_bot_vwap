@@ -1,6 +1,7 @@
 import os
 import time
 import yaml
+from datetime import datetime, timezone
 
 from tinkoff.invest import Client
 from tinkoff.invest.utils import now
@@ -8,6 +9,8 @@ from tinkoff.invest.utils import now
 from strategy import Strategy
 from risk import RiskManager
 from broker import Broker
+from telegram_notifier import notifier_from_env
+from report_day import load_trades, build_report
 
 
 def load_config(path: str = "config.yaml") -> dict:
@@ -31,6 +34,8 @@ def main():
     cfg = load_config()
     token = get_token()
 
+    notifier = notifier_from_env(enabled=bool(cfg.get("telegram", {}).get("enabled", True)))
+
     strategy = Strategy(cfg["strategy"])
     risk = RiskManager(cfg["risk"])
 
@@ -38,10 +43,15 @@ def main():
     error_sleep_sec = float(cfg.get("runtime", {}).get("error_sleep_sec", 10))
 
     with Client(token) as client:
-        broker = Broker(client, cfg["broker"])
+        broker = Broker(client, cfg["broker"], notifier=notifier)
 
         account_id = broker.pick_account_id()
         broker.log(f"[INFO] Account: {account_id} (sandbox={cfg['broker'].get('use_sandbox', True)})")
+
+        notifier.send(
+            f"trade_bot started\naccount={account_id}\nsandbox={cfg['broker'].get('use_sandbox', True)}",
+            throttle_sec=0,
+        )
 
         # >>> NEW: ensure sandbox cash
         if cfg["broker"].get("use_sandbox", True):
@@ -56,6 +66,8 @@ def main():
             return
 
         last_hb = 0.0
+        consecutive_errors = 0
+        report_sent_for_day: str | None = None
 
         while True:
             try:
@@ -69,12 +81,38 @@ def main():
                 # Вне торгового окна — только закрываемся при необходимости
                 if not broker.is_trading_time(ts, cfg["schedule"]):
                     broker.flatten_if_needed(account_id, cfg["schedule"])
+
+                    # Если день уже закончился — один раз строим дневной отчёт и отправляем в TG
+                    if broker.flatten_due(ts, cfg["schedule"]):
+                        day_key = datetime.now(timezone.utc).date().isoformat()
+                        if report_sent_for_day != day_key:
+                            try:
+                                df = load_trades(cfg["broker"].get("trades_csv", "logs/trades.csv"))
+                                report = build_report(df, datetime.now(timezone.utc).date())
+                                broker.log(report)
+                                notifier.send(report, throttle_sec=0)
+                                report_sent_for_day = day_key
+                            except Exception as e:
+                                broker.log(f"[WARN] Daily report generation failed: {e}")
+
                     time.sleep(min(10, sleep_sec))
                     continue
 
                 # Если время закрываться — закрываемся
                 if broker.flatten_due(ts, cfg["schedule"]):
                     broker.flatten_if_needed(account_id, cfg["schedule"])
+
+                    day_key = datetime.now(timezone.utc).date().isoformat()
+                    if report_sent_for_day != day_key:
+                        try:
+                            df = load_trades(cfg["broker"].get("trades_csv", "logs/trades.csv"))
+                            report = build_report(df, datetime.now(timezone.utc).date())
+                            broker.log(report)
+                            notifier.send(report, throttle_sec=0)
+                            report_sent_for_day = day_key
+                        except Exception as e:
+                            broker.log(f"[WARN] Daily report generation failed: {e}")
+
                     time.sleep(min(10, sleep_sec))
                     continue
 
@@ -85,11 +123,11 @@ def main():
 
                 entries_allowed = broker.new_entries_allowed(ts, cfg["schedule"])
 
-                for figi in figis:
-                    # 1) синхронизируем состояние
-                    broker.sync_state(account_id, figi)
+                # 1x per loop: account snapshot (positions + orders)
+                broker.refresh_account_snapshot(account_id, figis)
 
-                    # 2) проверяем изменения статуса активной заявки
+                for figi in figis:
+                    # проверяем изменения статуса активной заявки
                     broker.poll_order_updates(account_id, figi)
 
                     # 3) свечи
@@ -133,9 +171,11 @@ def main():
                 risk.update_day_pnl(day_metric)
 
                 time.sleep(sleep_sec)
+                consecutive_errors = 0
 
             except KeyboardInterrupt:
                 broker.log("[INFO] Stopped by user (Ctrl+C). Trying to flatten...")
+                notifier.send("trade_bot stopped by user (Ctrl+C). Flattening...", throttle_sec=0)
                 try:
                     broker.flatten_if_needed(account_id, cfg["schedule"])
                 except Exception as e:
@@ -147,6 +187,15 @@ def main():
                     broker.log(f"[ERROR] Main loop error: {e}")
                 except Exception:
                     print("Main loop error:", e)
+
+                consecutive_errors += 1
+                notifier.send(f"[ERROR] Main loop error: {e}", throttle_sec=120)
+
+                # fail-fast if something repeats over and over
+                if consecutive_errors >= int(cfg.get("runtime", {}).get("max_consecutive_errors", 8)):
+                    broker.log("[ERROR] Too many consecutive errors. Stopping bot.")
+                    notifier.send("[FATAL] Too many consecutive errors. Stopping bot.", throttle_sec=0)
+                    break
                 time.sleep(error_sleep_sec)
 
 
