@@ -43,6 +43,11 @@ def main():
         account_id = broker.pick_account_id()
         broker.log(f"[INFO] Account: {account_id} (sandbox={cfg['broker'].get('use_sandbox', True)})")
 
+        # >>> NEW: ensure sandbox cash
+        if cfg["broker"].get("use_sandbox", True):
+            min_cash = float(cfg["broker"].get("min_sandbox_cash_rub", 12000))
+            broker.ensure_sandbox_cash(account_id, min_cash_rub=min_cash)
+
         figis = broker.pick_tradeable_figis(cfg["universe"], max_lot_cost=cfg["risk"]["max_lot_cost_rub"])
         broker.log(f"[INFO] Tradeable FIGIs: {figis}")
 
@@ -56,7 +61,7 @@ def main():
             try:
                 ts = now()
 
-                # Heartbeat раз в минуту, чтобы видеть что бот жив
+                # Heartbeat раз в минуту
                 if time.time() - last_hb >= 60:
                     broker.log(f"[HB] alive | utc={ts.isoformat()}")
                     last_hb = time.time()
@@ -84,7 +89,7 @@ def main():
                     # 1) синхронизируем состояние
                     broker.sync_state(account_id, figi)
 
-                    # 2) проверяем изменения статуса активной заявки (исполнение/отмена/отклонение)
+                    # 2) проверяем изменения статуса активной заявки
                     broker.poll_order_updates(account_id, figi)
 
                     # 3) свечи
@@ -96,7 +101,7 @@ def main():
                     signal = strategy.make_signal(figi, candles, broker.state)
                     action = signal.get("action", "HOLD")
 
-                    # пишем сигнал в CSV (для анализа)
+                    # журналируем сигнал
                     if action in ("BUY", "SELL"):
                         broker.journal_event(
                             "SIGNAL",
