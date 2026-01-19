@@ -1,4 +1,432 @@
 [INFO] Account: 03e0156b-0554-4ea6-ab78-9aea6d687934 (sandbox=True)
+[OK] SBER BBG004730N88 lot=1 lot_cost≈301.30
+[OK] GAZP BBG004730RP0 lot=10 lot_cost≈1233.90
+[SKIP] LKOH lot_cost≈5434.50 > 3500.00
+[OK] GMKN BBG004731489 lot=10 lot_cost≈1578.60
+[OK] TATN BBG004RVFFC0 lot=1 lot_cost≈557.90
+[OK] NVTK BBG00475KKY8 lot=1 lot_cost≈1189.60
+[OK] ROSN BBG004731354 lot=1 lot_cost≈395.30
+[OK] ALRS BBG004S68B31 lot=10 lot_cost≈421.70
+[INFO] Tradeable FIGIs: ['BBG004730N88', 'BBG004730RP0', 'BBG004731489', 'BBG004RVFFC0', 'BBG00475KKY8', 'BBG004731354', 'BBG004S68B31']
+[HB] alive | utc=2026-01-19T07:58:18.452184+00:00
+17409b96df0d437ab14c84bfcbf9948a GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='17409b96df0d437ab14c84bfcbf9948a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=41, message='Authentication token is missing or invalid'))
+c4b524b79de6b17e4af6872a61eeff64 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='c4b524b79de6b17e4af6872a61eeff64', ratelimit_limit='200, 200;w=60', ratelimit_remaining=198, ratelimit_reset=40, message='Authentication token is missing or invalid'))
+b592c219f349753a7fcadc0841b405c9 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='b592c219f349753a7fcadc0841b405c9', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=38, message='Authentication token is missing or invalid'))
+[WARN] get_positions failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='b592c219f349753a7fcadc0841b405c9', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=38, message='Authentication token is missing or invalid'))
+d6237111dae26dd66544a32434605b16 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='d6237111dae26dd66544a32434605b16', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=38, message='Authentication token is missing or invalid'))
+9025f0a31927bb3e478a2cd5a77d58f7 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='9025f0a31927bb3e478a2cd5a77d58f7', ratelimit_limit='200, 200;w=60', ratelimit_remaining=198, ratelimit_reset=37, message='Authentication token is missing or invalid'))
+f8dc596e8f64b046c5921789695b04b3 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='f8dc596e8f64b046c5921789695b04b3', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=35, message='Authentication token is missing or invalid'))
+[WARN] get_orders failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='f8dc596e8f64b046c5921789695b04b3', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=35, message='Authentication token is missing or invalid'))
+feef77b0a7dfdc6d8847bb09661179e2 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='feef77b0a7dfdc6d8847bb09661179e2', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=35, message='Authentication token is missing or invalid'))
+827b144376179b0a3a84bc8c29c2b61c GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='827b144376179b0a3a84bc8c29c2b61c', ratelimit_limit='200, 200;w=60', ratelimit_remaining=195, ratelimit_reset=34, message='Authentication token is missing or invalid'))
+c8a60cced6a90ed42da4fcd95bb4e5d4 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='c8a60cced6a90ed42da4fcd95bb4e5d4', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=32, message='Authentication token is missing or invalid'))
+[WARN] get_positions failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='c8a60cced6a90ed42da4fcd95bb4e5d4', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=32, message='Authentication token is missing or invalid'))
+d3dad357d7c17871c135982c118ccfcf GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='d3dad357d7c17871c135982c118ccfcf', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=32, message='Authentication token is missing or invalid'))
+5604b36bf9b5fdf2bdc691dd483aa39f GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='5604b36bf9b5fdf2bdc691dd483aa39f', ratelimit_limit='200, 200;w=60', ratelimit_remaining=195, ratelimit_reset=31, message='Authentication token is missing or invalid'))
+e97c5f448950333e4e1a033a608afc1d GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='e97c5f448950333e4e1a033a608afc1d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=29, message='Authentication token is missing or invalid'))
+[WARN] get_orders failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='e97c5f448950333e4e1a033a608afc1d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=29, message='Authentication token is missing or invalid'))
+23048f878f805f2977123e1d9418b3e9 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='23048f878f805f2977123e1d9418b3e9', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=29, message='Authentication token is missing or invalid'))
+9c5e63ff6d2e35d7fd64a0b7118e991a GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='9c5e63ff6d2e35d7fd64a0b7118e991a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=28, message='Authentication token is missing or invalid'))
+4c5a24eb2388e62a1e61c79546a9f52f GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='4c5a24eb2388e62a1e61c79546a9f52f', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=26, message='Authentication token is missing or invalid'))
+[WARN] get_positions failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='4c5a24eb2388e62a1e61c79546a9f52f', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=26, message='Authentication token is missing or invalid'))
+1f1e2534e9acf0cfd6c1322ac2f82f35 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='1f1e2534e9acf0cfd6c1322ac2f82f35', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=26, message='Authentication token is missing or invalid'))
+c3fe805648a7a464903a5803eb642aec GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='c3fe805648a7a464903a5803eb642aec', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=25, message='Authentication token is missing or invalid'))
+21140aaf2466952964b97ea9a3d79cbc GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='21140aaf2466952964b97ea9a3d79cbc', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=23, message='Authentication token is missing or invalid'))
+[WARN] get_orders failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='21140aaf2466952964b97ea9a3d79cbc', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=23, message='Authentication token is missing or invalid'))
+4cb80003010364fd9a1acbb9958b3436 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='4cb80003010364fd9a1acbb9958b3436', ratelimit_limit='200, 200;w=60', ratelimit_remaining=190, ratelimit_reset=23, message='Authentication token is missing or invalid'))
+99b54a667c74c884987beb37a8ec97b5 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='99b54a667c74c884987beb37a8ec97b5', ratelimit_limit='200, 200;w=60', ratelimit_remaining=189, ratelimit_reset=22, message='Authentication token is missing or invalid'))
+3623a5d86ba72f0f6bab4b1b190334ed GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='3623a5d86ba72f0f6bab4b1b190334ed', ratelimit_limit='200, 200;w=60', ratelimit_remaining=188, ratelimit_reset=20, message='Authentication token is missing or invalid'))
+[WARN] get_positions failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='3623a5d86ba72f0f6bab4b1b190334ed', ratelimit_limit='200, 200;w=60', ratelimit_remaining=188, ratelimit_reset=20, message='Authentication token is missing or invalid'))
+ba79a65143b09bbfe7bfa47e7c5f9649 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='ba79a65143b09bbfe7bfa47e7c5f9649', ratelimit_limit='200, 200;w=60', ratelimit_remaining=190, ratelimit_reset=20, message='Authentication token is missing or invalid'))
+f5176b016518fb78dee1906c678e1ec4 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='f5176b016518fb78dee1906c678e1ec4', ratelimit_limit='200, 200;w=60', ratelimit_remaining=189, ratelimit_reset=19, message='Authentication token is missing or invalid'))
+d7abeb42395bc9b38206d0cf3b4da778 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='d7abeb42395bc9b38206d0cf3b4da778', ratelimit_limit='200, 200;w=60', ratelimit_remaining=188, ratelimit_reset=17, message='Authentication token is missing or invalid'))
+[WARN] get_orders failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='d7abeb42395bc9b38206d0cf3b4da778', ratelimit_limit='200, 200;w=60', ratelimit_remaining=188, ratelimit_reset=17, message='Authentication token is missing or invalid'))
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+Traceback (most recent call last):
+  File "C:\Users\Александр\trade_bot\main.py", line 117, in main
+    ok = broker.place_limit_buy(account_id, figi, signal["price"])
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\trade_bot\broker.py", line 373, in place_limit_buy
+    q = decimal_to_quotation(price)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\tinkoff\invest\utils.py", line 67, in decimal_to_quotation
+    return Quotation(units=int(decimal // 1), nano=int(fractional * Decimal("10e8")))
+                                                       ~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Александр\trade_bot\main.py", line 149, in <module>
+    main()
+  File "C:\Users\Александр\trade_bot\main.py", line 145, in main
+    time.sleep(error_sleep_sec)
+KeyboardInterrupt
+PS C:\Users\Александр\trade_bot> cd ..
+PS C:\Users\Александр> setx INVEST_TOKEN "t.zkzN_9o3ItEDpoOO3z6BSa_2ojYEWthIxHlChvuhJOrvwP0C6IaNXcW95ADPwgemfFdNU0DqMSyeD5NZ-lfW3Q"
+
+Успех. Указанное значение сохранено.
+PS C:\Users\Александр> cd trade_bot
+PS C:\Users\Александр\trade_bot> python main.py
+[INFO] Account: 03e0156b-0554-4ea6-ab78-9aea6d687934 (sandbox=True)
+[OK] SBER BBG004730N88 lot=1 lot_cost≈301.31
+[OK] GAZP BBG004730RP0 lot=10 lot_cost≈1234.60
+[SKIP] LKOH lot_cost≈5437.00 > 3500.00
+[OK] GMKN BBG004731489 lot=10 lot_cost≈1577.40
+[OK] TATN BBG004RVFFC0 lot=1 lot_cost≈557.60
+[OK] NVTK BBG00475KKY8 lot=1 lot_cost≈1188.80
+[OK] ROSN BBG004731354 lot=1 lot_cost≈395.50
+[OK] ALRS BBG004S68B31 lot=10 lot_cost≈421.30
+[INFO] Tradeable FIGIs: ['BBG004730N88', 'BBG004730RP0', 'BBG004731489', 'BBG004RVFFC0', 'BBG00475KKY8', 'BBG004731354', 'BBG004S68B31']
+[HB] alive | utc=2026-01-19T08:01:36.440760+00:00
+74649efb018ba5387e72c980aeae39a1 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='74649efb018ba5387e72c980aeae39a1', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=23, message='Authentication token is missing or invalid'))
+f8b76b79ae6d6c2615dd11c4522df8b3 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='f8b76b79ae6d6c2615dd11c4522df8b3', ratelimit_limit='200, 200;w=60', ratelimit_remaining=198, ratelimit_reset=22, message='Authentication token is missing or invalid'))
+d54fba00d315a50cbf9077f7a7e8dfeb GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='d54fba00d315a50cbf9077f7a7e8dfeb', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=20, message='Authentication token is missing or invalid'))
+[WARN] get_positions failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='d54fba00d315a50cbf9077f7a7e8dfeb', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=20, message='Authentication token is missing or invalid'))
+e805cbcec5909f7a9c2425339a3b5efb GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='e805cbcec5909f7a9c2425339a3b5efb', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=20, message='Authentication token is missing or invalid'))
+f6abe3b126925d0680c728f76c8bf684 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='f6abe3b126925d0680c728f76c8bf684', ratelimit_limit='200, 200;w=60', ratelimit_remaining=198, ratelimit_reset=19, message='Authentication token is missing or invalid'))
+275ee2959a52041bc10e7a65b0b9ba8b GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='275ee2959a52041bc10e7a65b0b9ba8b', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=17, message='Authentication token is missing or invalid'))
+[WARN] get_orders failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='275ee2959a52041bc10e7a65b0b9ba8b', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=17, message='Authentication token is missing or invalid'))
+0e90f2c1739d0b623caa76d9bddf6c6d GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='0e90f2c1739d0b623caa76d9bddf6c6d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=17, message='Authentication token is missing or invalid'))
+995f6f7e425aeff6db5817cde4450179 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='995f6f7e425aeff6db5817cde4450179', ratelimit_limit='200, 200;w=60', ratelimit_remaining=195, ratelimit_reset=16, message='Authentication token is missing or invalid'))
+b8d3ea1601aa8e31fc1191409a6249c7 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='b8d3ea1601aa8e31fc1191409a6249c7', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=14, message='Authentication token is missing or invalid'))
+[WARN] get_positions failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='b8d3ea1601aa8e31fc1191409a6249c7', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=14, message='Authentication token is missing or invalid'))
+47d4a1d7efc043ff4959c5303e315ddf GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='47d4a1d7efc043ff4959c5303e315ddf', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=14, message='Authentication token is missing or invalid'))
+7cefddcb97ea017852bea08c949a34a5 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='7cefddcb97ea017852bea08c949a34a5', ratelimit_limit='200, 200;w=60', ratelimit_remaining=195, ratelimit_reset=13, message='Authentication token is missing or invalid'))
+6d69044fa560876a23f799a294ddf592 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='6d69044fa560876a23f799a294ddf592', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=11, message='Authentication token is missing or invalid'))
+[WARN] get_orders failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='6d69044fa560876a23f799a294ddf592', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=11, message='Authentication token is missing or invalid'))
+cef4312f1bd925d1acc3d978ec852eb9 GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='cef4312f1bd925d1acc3d978ec852eb9', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=11, message='Authentication token is missing or invalid'))
+0b4e5dec3cff727433fb81930afd080b GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='0b4e5dec3cff727433fb81930afd080b', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=10, message='Authentication token is missing or invalid'))
+3267692e88873eb087cce484e2b420cf GetPositions UNAUTHENTICATED 40003
+[WARN] API error (attempt 3/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='3267692e88873eb087cce484e2b420cf', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=8, message='Authentication token is missing or invalid'))
+[WARN] get_positions failed: (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='3267692e88873eb087cce484e2b420cf', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=8, message='Authentication token is missing or invalid'))
+116da6799a16ea1fcb9875d2c6e935e5 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 1/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='116da6799a16ea1fcb9875d2c6e935e5', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=8, message='Authentication token is missing or invalid'))
+aab0973bc2fc4f8f0ef17d8efa9cb353 GetOrders UNAUTHENTICATED 40003
+[WARN] API error (attempt 2/3): (<StatusCode.UNAUTHENTICATED: (16, 'unauthenticated')>, '40003', Metadata(tracking_id='aab0973bc2fc4f8f0ef17d8efa9cb353', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=7, message='Authentication token is missing or invalid'))
+[INFO] Stopped by user (Ctrl+C). Trying to flatten...
+PS C:\Users\Александр\trade_bot> git pull origin main
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 3 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 2.20 KiB | 37.00 KiB/s, done.
+From https://github.com/AlexSDem/trade_bot
+ * branch            main       -> FETCH_HEAD
+   0657f7c..173f0a7  main       -> origin/main
+Updating 0657f7c..173f0a7
+Fast-forward
+ broker.py | 169 ++++++++++++++++++++++++++++++++------------------------------
+ 1 file changed, 88 insertions(+), 81 deletions(-)
+PS C:\Users\Александр\trade_bot> python main.py
+[INFO] Account: 03e0156b-0554-4ea6-ab78-9aea6d687934 (sandbox=True)
+[OK] SBER BBG004730N88 lot=1 lot_cost≈303.01
+[OK] GAZP BBG004730RP0 lot=10 lot_cost≈1238.00
+[SKIP] LKOH lot_cost≈5454.50 > 3500.00
+[OK] GMKN BBG004731489 lot=10 lot_cost≈1583.80
+[OK] TATN BBG004RVFFC0 lot=1 lot_cost≈561.60
+[OK] NVTK BBG00475KKY8 lot=1 lot_cost≈1198.00
+[OK] ROSN BBG004731354 lot=1 lot_cost≈397.20
+[OK] ALRS BBG004S68B31 lot=10 lot_cost≈422.60
+[INFO] Tradeable FIGIs: ['BBG004730N88', 'BBG004730RP0', 'BBG004731489', 'BBG004RVFFC0', 'BBG00475KKY8', 'BBG004731354', 'BBG004S68B31']
+[HB] alive | utc=2026-01-19T08:21:27.440963+00:00
+[HB] alive | utc=2026-01-19T08:23:18.733001+00:00
+[HB] alive | utc=2026-01-19T08:25:09.975872+00:00
+[HB] alive | utc=2026-01-19T08:27:01.271854+00:00
+[HB] alive | utc=2026-01-19T08:28:52.452750+00:00
+[HB] alive | utc=2026-01-19T08:30:43.767593+00:00
+[HB] alive | utc=2026-01-19T08:32:34.983567+00:00
+[HB] alive | utc=2026-01-19T08:34:26.320969+00:00
+[HB] alive | utc=2026-01-19T08:36:17.511428+00:00
+[HB] alive | utc=2026-01-19T08:38:08.852556+00:00
+[HB] alive | utc=2026-01-19T08:40:00.115658+00:00
+[HB] alive | utc=2026-01-19T08:41:51.495068+00:00
+[HB] alive | utc=2026-01-19T08:43:42.697815+00:00
+[HB] alive | utc=2026-01-19T08:45:34.000960+00:00
+[HB] alive | utc=2026-01-19T08:47:25.230136+00:00
+[HB] alive | utc=2026-01-19T08:49:16.493452+00:00
+[HB] alive | utc=2026-01-19T08:51:07.738190+00:00
+[HB] alive | utc=2026-01-19T08:52:58.972124+00:00
+[HB] alive | utc=2026-01-19T08:54:50.305849+00:00
+[HB] alive | utc=2026-01-19T08:56:41.537298+00:00
+[HB] alive | utc=2026-01-19T08:58:32.809128+00:00
+[HB] alive | utc=2026-01-19T09:00:24.091812+00:00
+[HB] alive | utc=2026-01-19T09:02:15.400172+00:00
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[HB] alive | utc=2026-01-19T09:03:21.302366+00:00
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[HB] alive | utc=2026-01-19T09:04:22.867267+00:00
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[HB] alive | utc=2026-01-19T09:05:59.464919+00:00
+[HB] alive | utc=2026-01-19T09:07:50.761174+00:00
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[HB] alive | utc=2026-01-19T09:08:56.643926+00:00
+[ERROR] Main loop error: unsupported operand type(s) for *: 'float' and 'decimal.Decimal'
+[HB] alive | utc=2026-01-19T09:10:02.534363+00:00
+[HB] alive | utc=2026-01-19T09:11:53.879619+00:00
+[INFO] Stopped by user (Ctrl+C). Trying to flatten...
+PS C:\Users\Александр\trade_bot> git pull origin main
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 3 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 1.56 KiB | 76.00 KiB/s, done.
+From https://github.com/AlexSDem/trade_bot
+ * branch            main       -> FETCH_HEAD
+   173f0a7..c8ab898  main       -> origin/main
+Updating 173f0a7..c8ab898
+Fast-forward
+ broker.py | 80 ++++++++++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 46 insertions(+), 34 deletions(-)
+PS C:\Users\Александр\trade_bot> python main.py
+[INFO] Account: 03e0156b-0554-4ea6-ab78-9aea6d687934 (sandbox=True)
+[OK] SBER BBG004730N88 lot=1 lot_cost≈303.67
+[OK] GAZP BBG004730RP0 lot=10 lot_cost≈1235.90
+[SKIP] LKOH lot_cost≈5436.50 > 3500.00
+[OK] GMKN BBG004731489 lot=10 lot_cost≈1578.60
+[OK] TATN BBG004RVFFC0 lot=1 lot_cost≈561.10
+[OK] NVTK BBG00475KKY8 lot=1 lot_cost≈1195.40
+[OK] ROSN BBG004731354 lot=1 lot_cost≈396.20
+[OK] ALRS BBG004S68B31 lot=10 lot_cost≈420.50
+[INFO] Tradeable FIGIs: ['BBG004730N88', 'BBG004730RP0', 'BBG004731489', 'BBG004RVFFC0', 'BBG00475KKY8', 'BBG004731354', 'BBG004S68B31']
+[HB] alive | utc=2026-01-19T09:13:31.016055+00:00
+[HB] alive | utc=2026-01-19T09:15:22.252212+00:00
+3c46f37e7d6c3efc6153ab8cb4286d56 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='3c46f37e7d6c3efc6153ab8cb4286d56', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=42, message='Not enough balance'))
+d6479706fc86136d1f11aec8437cbf2d PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='d6479706fc86136d1f11aec8437cbf2d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=41, message='Not enough balance'))
+358f3a7d00ce4f15f632035dd6a0ed0d PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='358f3a7d00ce4f15f632035dd6a0ed0d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=39, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='358f3a7d00ce4f15f632035dd6a0ed0d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=39, message='Not enough balance'))
+[HB] alive | utc=2026-01-19T09:17:16.660326+00:00
+[HB] alive | utc=2026-01-19T09:19:07.886214+00:00
+[HB] alive | utc=2026-01-19T09:20:59.126734+00:00
+5a65ed4e4f6061aa78402a4c31483787 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='5a65ed4e4f6061aa78402a4c31483787', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=60, message='Not enough balance'))
+b286197dc04a81c89dcc78c0c1cd20c9 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='b286197dc04a81c89dcc78c0c1cd20c9', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=59, message='Not enough balance'))
+440e09381cf5b3c9d2655d63c8b613fb PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='440e09381cf5b3c9d2655d63c8b613fb', ratelimit_limit='200, 200;w=60', ratelimit_remaining=195, ratelimit_reset=57, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='440e09381cf5b3c9d2655d63c8b613fb', ratelimit_limit='200, 200;w=60', ratelimit_remaining=195, ratelimit_reset=57, message='Not enough balance'))
+b1772bc1982ad382783a55a1fb70189d PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='b1772bc1982ad382783a55a1fb70189d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=179, ratelimit_reset=2, message='Not enough balance'))
+b27931d9c96491a611e21b8fdc41eb44 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='b27931d9c96491a611e21b8fdc41eb44', ratelimit_limit='200, 200;w=60', ratelimit_remaining=178, ratelimit_reset=1, message='Not enough balance'))
+fc9655e6cf31954feed973bfb0f6ef76 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='fc9655e6cf31954feed973bfb0f6ef76', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=59, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='fc9655e6cf31954feed973bfb0f6ef76', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=59, message='Not enough balance'))
+[HB] alive | utc=2026-01-19T09:22:56.490693+00:00
+6a81526d7789b3bfa16a7f00a96e52b7 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='6a81526d7789b3bfa16a7f00a96e52b7', ratelimit_limit='200, 200;w=60', ratelimit_remaining=183, ratelimit_reset=3, message='Not enough balance'))
+2c3384085d85992341ec6b56849cbf02 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='2c3384085d85992341ec6b56849cbf02', ratelimit_limit='200, 200;w=60', ratelimit_remaining=182, ratelimit_reset=2, message='Not enough balance'))
+6a58aa08f534d94a74988c5b1cef41e6 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='6a58aa08f534d94a74988c5b1cef41e6', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=60, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='6a58aa08f534d94a74988c5b1cef41e6', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=60, message='Not enough balance'))
+d654cd80f3810ae173f2f842455ffe4a PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='d654cd80f3810ae173f2f842455ffe4a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=183, ratelimit_reset=4, message='Not enough balance'))
+a7118b15a73489e92e83c06381fc2125 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='a7118b15a73489e92e83c06381fc2125', ratelimit_limit='200, 200;w=60', ratelimit_remaining=182, ratelimit_reset=3, message='Not enough balance'))
+8da6df12511dcfeaef72a92cd09cdfcc PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='8da6df12511dcfeaef72a92cd09cdfcc', ratelimit_limit='200, 200;w=60', ratelimit_remaining=181, ratelimit_reset=1, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='8da6df12511dcfeaef72a92cd09cdfcc', ratelimit_limit='200, 200;w=60', ratelimit_remaining=181, ratelimit_reset=1, message='Not enough balance'))
+[HB] alive | utc=2026-01-19T09:24:53.919750+00:00
+dc508b1fc7f228f7436f786cf218287b PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='dc508b1fc7f228f7436f786cf218287b', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=6, message='Not enough balance'))
+912f86519a3b55b4bc33bc113cce5566 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='912f86519a3b55b4bc33bc113cce5566', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=5, message='Not enough balance'))
+97a08fb1a38803c58d71fdb67aec2dfa PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='97a08fb1a38803c58d71fdb67aec2dfa', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=3, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='97a08fb1a38803c58d71fdb67aec2dfa', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=3, message='Not enough balance'))
+a32f32de937d6f4087ca81d7d735c886 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='a32f32de937d6f4087ca81d7d735c886', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=7, message='Not enough balance'))
+f9547b43f23ea616b3c4ed3f386dfd55 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='f9547b43f23ea616b3c4ed3f386dfd55', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=6, message='Not enough balance'))
+755e63470f1cded091bb6de9cda8559e PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='755e63470f1cded091bb6de9cda8559e', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=4, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='755e63470f1cded091bb6de9cda8559e', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=4, message='Not enough balance'))
+[HB] alive | utc=2026-01-19T09:26:51.315117+00:00
+adeb66c44f9c54cc2fe3e1aec922c0bf PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='adeb66c44f9c54cc2fe3e1aec922c0bf', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=8, message='Not enough balance'))
+4e52a564bebb9513b85fda18cded0811 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='4e52a564bebb9513b85fda18cded0811', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=7, message='Not enough balance'))
+d1e4564f0640a94fa7659b61a61c8b6d PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='d1e4564f0640a94fa7659b61a61c8b6d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=5, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='d1e4564f0640a94fa7659b61a61c8b6d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=5, message='Not enough balance'))
+27aa6f600b0322072a37198e4e331625 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='27aa6f600b0322072a37198e4e331625', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=9, message='Not enough balance'))
+09753202d3f1e0fb711d5ae153aae828 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='09753202d3f1e0fb711d5ae153aae828', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=8, message='Not enough balance'))
+923ea720d8ee704a04d9e8480e90048b PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='923ea720d8ee704a04d9e8480e90048b', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=6, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='923ea720d8ee704a04d9e8480e90048b', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=6, message='Not enough balance'))
+[HB] alive | utc=2026-01-19T09:28:48.877678+00:00
+d2e61bbb98837ba1422a3f38f8fe0045 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='d2e61bbb98837ba1422a3f38f8fe0045', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=11, message='Not enough balance'))
+04248bd713aaffc4c4e904f933a3d9ae PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='04248bd713aaffc4c4e904f933a3d9ae', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=10, message='Not enough balance'))
+ce4c17fc592337f0049cf5c8d1079a68 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='ce4c17fc592337f0049cf5c8d1079a68', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=8, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='ce4c17fc592337f0049cf5c8d1079a68', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=8, message='Not enough balance'))
+9feb2891f405ae08cc7e603c9002aa8b PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='9feb2891f405ae08cc7e603c9002aa8b', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=12, message='Not enough balance'))
+335ece8e27dd689bdcaf40824668c67a PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='335ece8e27dd689bdcaf40824668c67a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=11, message='Not enough balance'))
+efda9d1838814d8f4ffb1f146db7b27c PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='efda9d1838814d8f4ffb1f146db7b27c', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=9, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='efda9d1838814d8f4ffb1f146db7b27c', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=9, message='Not enough balance'))
+[HB] alive | utc=2026-01-19T09:30:46.292109+00:00
+34973241fb54a2c9c008c3e4806f3477 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='34973241fb54a2c9c008c3e4806f3477', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=13, message='Not enough balance'))
+f44e5f54fd19c8c709dcb5a640abc539 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='f44e5f54fd19c8c709dcb5a640abc539', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=12, message='Not enough balance'))
+25a0d7c5c877c4de7f468fa84ad9de7a PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='25a0d7c5c877c4de7f468fa84ad9de7a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=10, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='25a0d7c5c877c4de7f468fa84ad9de7a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=10, message='Not enough balance'))
+[INFO] Stopped by user (Ctrl+C). Trying to flatten...
+PS C:\Users\Александр\trade_bot> git pull origin main
+remote: Enumerating objects: 13, done.
+remote: Counting objects: 100% (13/13), done.
+remote: Compressing objects: 100% (9/9), done.
+remote: Total 9 (delta 6), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (9/9), 3.50 KiB | 137.00 KiB/s, done.
+From https://github.com/AlexSDem/trade_bot
+ * branch            main       -> FETCH_HEAD
+   c8ab898..f0e4db4  main       -> origin/main
+Updating c8ab898..f0e4db4
+Fast-forward
+ broker.py           | 84 +++++++++++++++++++++++++++++++++++++++--------------
+ config.yaml.example |  1 +
+ main.py             | 11 +++++--
+ 3 files changed, 71 insertions(+), 25 deletions(-)
+PS C:\Users\Александр\trade_bot> python main.py
+[INFO] Account: 03e0156b-0554-4ea6-ab78-9aea6d687934 (sandbox=True)
+[INFO] Sandbox pay-in: +12000.00 rub (cash was 0.00)
+[OK] SBER BBG004730N88 lot=1 lot_cost≈303.30
+[OK] GAZP BBG004730RP0 lot=10 lot_cost≈1236.80
+[SKIP] LKOH lot_cost≈5441.00 > 3500.00
+[OK] GMKN BBG004731489 lot=10 lot_cost≈1577.40
+[OK] TATN BBG004RVFFC0 lot=1 lot_cost≈561.70
+[OK] NVTK BBG00475KKY8 lot=1 lot_cost≈1194.80
+[OK] ROSN BBG004731354 lot=1 lot_cost≈396.25
+[OK] ALRS BBG004S68B31 lot=10 lot_cost≈422.40
+[INFO] Tradeable FIGIs: ['BBG004730N88', 'BBG004730RP0', 'BBG004731489', 'BBG004RVFFC0', 'BBG00475KKY8', 'BBG004731354', 'BBG004S68B31']
+[HB] alive | utc=2026-01-19T09:31:57.816687+00:00
+[ORDER] BUY BBG004731489 qty=1 price=157.68 (client_uid=81f7921f-66fd-4c07-98d0-2c6ecc40cad2)
+[SIGNAL] BUY BBG004731489 @ 157.68 | mean_reversion last<157.8301
+[HB] alive | utc=2026-01-19T09:33:49.143664+00:00
+[HB] alive | utc=2026-01-19T09:35:40.463814+00:00
+[HB] alive | utc=2026-01-19T09:37:31.751067+00:00
+[HB] alive | utc=2026-01-19T09:39:22.984814+00:00
+[HB] alive | utc=2026-01-19T09:41:14.354187+00:00
+[HB] alive | utc=2026-01-19T09:43:05.662399+00:00
+[HB] alive | utc=2026-01-19T09:44:57.000964+00:00
+[HB] alive | utc=2026-01-19T09:46:48.299634+00:00
+[HB] alive | utc=2026-01-19T09:48:39.644258+00:00
+[HB] alive | utc=2026-01-19T09:50:30.959478+00:00
+[HB] alive | utc=2026-01-19T09:52:22.487098+00:00
+[HB] alive | utc=2026-01-19T09:54:13.767428+00:00
+[HB] alive | utc=2026-01-19T09:56:05.102753+00:00
+[HB] alive | utc=2026-01-19T09:57:56.338483+00:00
+[HB] alive | utc=2026-01-19T09:59:47.642695+00:00
+[HB] alive | utc=2026-01-19T10:01:38.968835+00:00
+[HB] alive | utc=2026-01-19T10:03:30.304687+00:00
+[HB] alive | utc=2026-01-19T10:05:21.611389+00:00
+[HB] alive | utc=2026-01-19T10:07:12.910533+00:00
+[HB] alive | utc=2026-01-19T10:09:04.203504+00:00
+[HB] alive | utc=2026-01-19T10:10:55.512366+00:00
+[HB] alive | utc=2026-01-19T10:12:46.767309+00:00
+[HB] alive | utc=2026-01-19T10:14:38.049358+00:00
+[HB] alive | utc=2026-01-19T10:16:29.362288+00:00
+[ORDER] BUY BBG00475KKY8 qty=1 price=1194.2 (client_uid=e3a430fc-f570-4411-85ee-9e31abe67db3)
+[SIGNAL] BUY BBG00475KKY8 @ 1194.2 | mean_reversion last<1194.9108
+[HB] alive | utc=2026-01-19T10:18:20.828054+00:00
+[HB] alive | utc=2026-01-19T10:20:12.258335+00:00
+[HB] alive | utc=2026-01-19T10:22:03.603416+00:00
+[HB] alive | utc=2026-01-19T10:23:54.928364+00:00
+[HB] alive | utc=2026-01-19T10:25:46.270138+00:00
+[HB] alive | utc=2026-01-19T10:27:37.587553+00:00
+[HB] alive | utc=2026-01-19T10:29:28.971407+00:00
+[HB] alive | utc=2026-01-19T10:31:20.401934+00:00
+[HB] alive | utc=2026-01-19T10:33:11.758487+00:00
+[HB] alive | utc=2026-01-19T10:35:03.099745+00:00
+[ORDER] BUY BBG004730N88 qty=1 price=302.93 (client_uid=4b8c9fc7-7608-4524-aa84-2a3fd9eaed20)
+[SIGNAL] BUY BBG004730N88 @ 302.93 | mean_reversion last<302.9312
+[WARN] get_positions failed: 'int' object has no attribute 'nano'
+[HB] alive | utc=2026-01-19T10:36:54.604451+00:00
+[WARN] get_positions failed: 'int' object has no attribute 'nano'
+[WARN] get_positions failed: 'int' object has no attribute 'nano'
+[HB] alive | utc=2026-01-19T10:38:45.929998+00:00
+[WARN] get_positions failed: 'int' object has no attribute 'nano'
+[WARN] get_positions failed: 'int' object has no attribute 'nano'
+[HB] alive | utc=2026-01-19T10:40:37.273427+00:00
+[WARN] get_positions failed: 'int' object has no attribute 'nano'
+[WARN] get_positions failed: 'int' object has no attribute 'nano'
+[HB] alive | utc=2026-01-19T10:42:28.608250+00:00
+[WARN] get_positions failed: 'int' object has no attribute 'nano'
+[WARN] get_positions failed: 'int' object has no attribute 'nano'
+[INFO] Stopped by user (Ctrl+C). Trying to flatten...
+PS C:\Users\Александр\trade_bot> git pull origin main
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 3 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 1.56 KiB | 59.00 KiB/s, done.
+From https://github.com/AlexSDem/trade_bot
+ * branch            main       -> FETCH_HEAD
+   f0e4db4..a877402  main       -> origin/main
+Updating f0e4db4..a877402
+Fast-forward
+ broker.py | 57 ++++++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 42 insertions(+), 15 deletions(-)
+PS C:\Users\Александр\trade_bot> python main.py
+[INFO] Account: 03e0156b-0554-4ea6-ab78-9aea6d687934 (sandbox=True)
 [INFO] Sandbox pay-in: +3074.08 rub (cash was 8925.92)
 [OK] SBER BBG004730N88 lot=1 lot_cost≈302.92
 [OK] GAZP BBG004730RP0 lot=10 lot_cost≈1239.10
@@ -200,3 +628,4 @@
 [HB] alive | utc=2026-01-19T15:44:41.074225+00:00
 [HB] alive | utc=2026-01-19T15:45:41.078767+00:00
 [HB] alive | utc=2026-01-19T15:46:41.081443+00:00
+[HB] alive | utc=2026-01-19T15:47:41.085274+00:00
