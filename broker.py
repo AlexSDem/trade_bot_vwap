@@ -141,12 +141,31 @@ class Broker:
         hh, mm = s.split(":")
         return datetime.strptime(f"{hh}:{mm}", "%H:%M").time()
 
+    # ---------- routing helpers (sandbox vs real) ----------
+    def _positions_call(self):
+        return self.client.sandbox.get_sandbox_positions if self.use_sandbox else self.client.operations.get_positions
+
+    def _orders_list_call(self):
+        return self.client.sandbox.get_sandbox_orders if self.use_sandbox else self.client.orders.get_orders
+
+    def _order_post_call(self):
+        return self.client.sandbox.post_sandbox_order if self.use_sandbox else self.client.orders.post_order
+
+    def _order_cancel_call(self):
+        return self.client.sandbox.cancel_sandbox_order if self.use_sandbox else self.client.orders.cancel_order
+
+    def _order_state_call(self):
+        return self.client.sandbox.get_sandbox_order_state if self.use_sandbox else self.client.orders.get_order_state
+
+    def _operations_call(self):
+        return self.client.sandbox.get_sandbox_operations if self.use_sandbox else self.client.operations.get_operations
+
     # ---------- accounts / sandbox ----------
     def pick_account_id(self) -> str:
         """
         In sandbox:
           - if no accounts -> open
-          - optional pay-in (sandbox_pay_in_rub)
+          - optional pay-in at creation (sandbox_pay_in_rub)
         In real:
           - pick first account from users.get_accounts()
         """
@@ -181,9 +200,51 @@ class Broker:
 
     @staticmethod
     def _money_value(amount: float, currency: str):
+        # keep robust conversion float -> Decimal -> Quotation -> MoneyValue
         q = decimal_to_quotation(Decimal(str(float(amount))))
         from tinkoff.invest import MoneyValue  # type: ignore
         return MoneyValue(units=q.units, nano=q.nano, currency=currency)
+
+    # ---------- sandbox cash helpers ----------
+    def get_cash_rub(self, account_id: str) -> float:
+        """
+        Returns available cash in self.currency (default rub).
+        Uses positions call (sandbox or real).
+        """
+        try:
+            pos = self._call(self._positions_call(), account_id=account_id)
+            cash = 0.0
+            for m in pos.money:
+                if m.currency == self.currency:
+                    cash += float(quotation_to_decimal(m))
+            return float(cash)
+        except Exception as e:
+            self.log(f"[WARN] get_cash_rub failed: {e}")
+            return 0.0
+
+    def ensure_sandbox_cash(self, account_id: str, min_cash_rub: float):
+        """
+        If sandbox and cash < min_cash_rub -> top-up using sandbox_pay_in.
+        """
+        if not self.use_sandbox:
+            return
+
+        min_cash_rub = float(min_cash_rub)
+        cash = self.get_cash_rub(account_id)
+        if cash >= min_cash_rub:
+            self.log(f"[INFO] Sandbox cash OK: {cash:.2f} {self.currency}")
+            return
+
+        topup = max(0.0, min_cash_rub - cash)
+        try:
+            self._call(
+                self.client.sandbox.sandbox_pay_in,
+                account_id=account_id,
+                amount=self._money_value(topup, self.currency),
+            )
+            self.log(f"[INFO] Sandbox pay-in: +{topup:.2f} {self.currency} (cash was {cash:.2f})")
+        except Exception as e:
+            self.log(f"[WARN] Sandbox pay-in failed: {e}")
 
     # ---------- instruments ----------
     def resolve_instruments(self, tickers: List[str]) -> Dict[str, InstrumentInfo]:
@@ -224,7 +285,6 @@ class Broker:
                 self.log(f"[SKIP] {t} no last price")
                 continue
 
-            # HARD CAST: keep float inside broker
             last_price_f = float(last_price)
             lot_cost = last_price_f * int(info.lot)
 
@@ -295,25 +355,6 @@ class Broker:
         except RequestError as e:
             self.log(f"[WARN] candles error {figi}: {e}")
             return None
-
-    # ---------- routing helpers (sandbox vs real) ----------
-    def _positions_call(self):
-        return self.client.sandbox.get_sandbox_positions if self.use_sandbox else self.client.operations.get_positions
-
-    def _orders_list_call(self):
-        return self.client.sandbox.get_sandbox_orders if self.use_sandbox else self.client.orders.get_orders
-
-    def _order_post_call(self):
-        return self.client.sandbox.post_sandbox_order if self.use_sandbox else self.client.orders.post_order
-
-    def _order_cancel_call(self):
-        return self.client.sandbox.cancel_sandbox_order if self.use_sandbox else self.client.orders.cancel_order
-
-    def _order_state_call(self):
-        return self.client.sandbox.get_sandbox_order_state if self.use_sandbox else self.client.orders.get_order_state
-
-    def _operations_call(self):
-        return self.client.sandbox.get_sandbox_operations if self.use_sandbox else self.client.operations.get_operations
 
     # ---------- state sync ----------
     def sync_state(self, account_id: str, figi: str):
@@ -632,4 +673,3 @@ class Broker:
         except Exception as e:
             self.log(f"[WARN] calc_day_cashflow failed: {e}")
             return 0.0
-
