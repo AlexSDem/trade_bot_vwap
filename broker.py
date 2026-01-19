@@ -43,6 +43,10 @@ class Broker:
       - idempotent limit orders (client uid)
       - CSV trade journal (signals/orders/fills/cancels/rejects)
       - order execution polling via get_order_state (sandbox/real)
+
+    IMPORTANT TYPE RULE:
+      - internally we keep ALL prices as float
+      - Decimal is used ONLY when constructing Quotation/MoneyValue for API calls
     """
 
     def __init__(self, client: Client, cfg: dict):
@@ -177,7 +181,7 @@ class Broker:
 
     @staticmethod
     def _money_value(amount: float, currency: str):
-        q = decimal_to_quotation(Decimal(str(amount)))
+        q = decimal_to_quotation(Decimal(str(float(amount))))
         from tinkoff.invest import MoneyValue  # type: ignore
         return MoneyValue(units=q.units, nano=q.nano, currency=currency)
 
@@ -204,7 +208,7 @@ class Broker:
             lot = int(share.lot)
             mpi = float(quotation_to_decimal(share.min_price_increment))
 
-            info = InstrumentInfo(ticker=t, figi=figi, lot=lot, min_price_increment=mpi)
+            info = InstrumentInfo(ticker=t, figi=figi, lot=lot, min_price_increment=float(mpi))
             out[t] = info
             self._figi_info[figi] = info
 
@@ -220,12 +224,15 @@ class Broker:
                 self.log(f"[SKIP] {t} no last price")
                 continue
 
-            lot_cost = last_price * info.lot
-            if lot_cost <= max_lot_cost:
+            # HARD CAST: keep float inside broker
+            last_price_f = float(last_price)
+            lot_cost = last_price_f * int(info.lot)
+
+            if lot_cost <= float(max_lot_cost):
                 figis.append(info.figi)
                 self.log(f"[OK] {t} {info.figi} lot={info.lot} lot_cost≈{lot_cost:.2f}")
             else:
-                self.log(f"[SKIP] {t} lot_cost≈{lot_cost:.2f} > {max_lot_cost:.2f}")
+                self.log(f"[SKIP] {t} lot_cost≈{lot_cost:.2f} > {float(max_lot_cost):.2f}")
 
         return figis
 
@@ -233,14 +240,14 @@ class Broker:
     @staticmethod
     def _round_to_step_down(price: float, step: float) -> float:
         if step <= 0:
-            return price
-        return math.floor(price / step) * step
+            return float(price)
+        return float(math.floor(float(price) / float(step)) * float(step))
 
     def _normalize_price(self, figi: str, price: float) -> float:
         info = self._figi_info.get(figi)
         if not info:
-            return price
-        return self._round_to_step_down(price, info.min_price_increment)
+            return float(price)
+        return float(self._round_to_step_down(float(price), float(info.min_price_increment)))
 
     # ---------- market data ----------
     def get_last_price(self, figi: str) -> Optional[float]:
@@ -248,7 +255,12 @@ class Broker:
             r = self._call(self.client.market_data.get_last_prices, figi=[figi])
             if not r.last_prices:
                 return None
-            return float(quotation_to_decimal(r.last_prices[0].price))
+
+            p = quotation_to_decimal(r.last_prices[0].price)
+            if p is None:
+                return None
+
+            return float(p)
         except Exception:
             return None
 
@@ -314,7 +326,7 @@ class Broker:
         self._ensure_day_rollover()
         fs = self.state.get(figi)
 
-        prev_lots = fs.position_lots
+        prev_lots = int(fs.position_lots)
 
         # Positions
         try:
@@ -322,10 +334,9 @@ class Broker:
             lots = 0
             for sec in pos.securities:
                 if sec.figi == figi:
-                    # balance is Quotation-like
                     lots = int(quotation_to_decimal(sec.balance))
                     break
-            fs.position_lots = lots
+            fs.position_lots = int(lots)
         except Exception as e:
             self.log(f"[WARN] get_positions failed: {e}")
 
@@ -338,11 +349,11 @@ class Broker:
             self.log(f"[WARN] get_orders failed: {e}")
 
         # Entry bookkeeping
-        if prev_lots > 0 and fs.position_lots == 0:
+        if prev_lots > 0 and int(fs.position_lots) == 0:
             fs.entry_price = None
             fs.entry_time = None
 
-        if prev_lots == 0 and fs.position_lots > 0:
+        if prev_lots == 0 and int(fs.position_lots) > 0:
             if fs.entry_time is None:
                 fs.entry_time = now()
             if fs.entry_price is None:
@@ -385,19 +396,19 @@ class Broker:
 
         if fs.active_order_id:
             return False
-        if fs.position_lots > 0:
+        if int(fs.position_lots) > 0:
             return False
 
-        price = self._normalize_price(figi, price)
+        price_f = self._normalize_price(figi, float(price))
         client_uid = str(uuid.uuid4())
-        q = decimal_to_quotation(price)
+        q = decimal_to_quotation(Decimal(str(price_f)))
 
         try:
             r = self._call(
                 self._order_post_call(),
                 account_id=account_id,
                 figi=figi,
-                quantity=quantity_lots,
+                quantity=int(quantity_lots),
                 price=Quotation(units=q.units, nano=q.nano),
                 direction=OrderDirection.ORDER_DIRECTION_BUY,
                 order_type=OrderType.ORDER_TYPE_LIMIT,
@@ -408,14 +419,14 @@ class Broker:
             fs.active_order_id = r.order_id
             self.state.trades_today += 1
 
-            self.log(f"[ORDER] BUY {figi} qty={quantity_lots} price={price} (client_uid={client_uid})")
+            self.log(f"[ORDER] BUY {figi} qty={int(quantity_lots)} price={price_f} (client_uid={client_uid})")
 
             self.journal_event(
                 "SUBMIT",
                 figi,
                 side="BUY",
-                lots=quantity_lots,
-                price=price,
+                lots=int(quantity_lots),
+                price=float(price_f),
                 order_id=r.order_id,
                 client_uid=client_uid,
                 status="NEW",
@@ -429,22 +440,22 @@ class Broker:
 
     def place_limit_sell_to_close(self, account_id: str, figi: str, price: float) -> bool:
         fs = self.state.get(figi)
-        if fs.position_lots <= 0:
+        if int(fs.position_lots) <= 0:
             return False
 
         if fs.active_order_id:
             self.cancel_active_order(account_id, figi)
 
-        price = self._normalize_price(figi, price)
+        price_f = self._normalize_price(figi, float(price))
         client_uid = str(uuid.uuid4())
-        q = decimal_to_quotation(price)
+        q = decimal_to_quotation(Decimal(str(price_f)))
 
         try:
             r = self._call(
                 self._order_post_call(),
                 account_id=account_id,
                 figi=figi,
-                quantity=fs.position_lots,
+                quantity=int(fs.position_lots),
                 price=Quotation(units=q.units, nano=q.nano),
                 direction=OrderDirection.ORDER_DIRECTION_SELL,
                 order_type=OrderType.ORDER_TYPE_LIMIT,
@@ -454,14 +465,14 @@ class Broker:
             fs.client_order_uid = client_uid
             fs.active_order_id = r.order_id
 
-            self.log(f"[ORDER] SELL {figi} qty={fs.position_lots} price={price} (client_uid={client_uid})")
+            self.log(f"[ORDER] SELL {figi} qty={int(fs.position_lots)} price={price_f} (client_uid={client_uid})")
 
             self.journal_event(
                 "SUBMIT",
                 figi,
                 side="SELL",
-                lots=fs.position_lots,
-                price=price,
+                lots=int(fs.position_lots),
+                price=float(price_f),
                 order_id=r.order_id,
                 client_uid=client_uid,
                 status="NEW",
@@ -504,7 +515,7 @@ class Broker:
         side = "BUY" if "BUY" in direction else ("SELL" if "SELL" in direction else "")
 
         # partial fill
-        if lots_executed > 0 and 0 < lots_requested and lots_executed < lots_requested:
+        if lots_executed > 0 and lots_requested > 0 and lots_executed < lots_requested:
             self.journal_event(
                 "PARTIAL_FILL",
                 figi,
@@ -542,7 +553,7 @@ class Broker:
                     if fs.entry_time is None:
                         fs.entry_time = now()
                     if fs.entry_price is None and avg_price is not None:
-                        fs.entry_price = avg_price
+                        fs.entry_price = float(avg_price)
                 elif side == "SELL":
                     fs.entry_price = None
                     fs.entry_time = None
@@ -588,11 +599,11 @@ class Broker:
             if fs.active_order_id:
                 self.cancel_active_order(account_id, figi)
 
-            if fs.position_lots > 0:
+            if int(fs.position_lots) > 0:
                 last = self.get_last_price(figi)
                 if last is None:
                     continue
-                self.place_limit_sell_to_close(account_id, figi, price=last)
+                self.place_limit_sell_to_close(account_id, figi, price=float(last))
 
     # ---------- day metric ----------
     def calc_day_cashflow(self, account_id: str) -> float:
@@ -617,7 +628,8 @@ class Broker:
                 if op.payment.currency == self.currency:
                     total += float(quotation_to_decimal(op.payment))
 
-            return total
+            return float(total)
         except Exception as e:
             self.log(f"[WARN] calc_day_cashflow failed: {e}")
             return 0.0
+
