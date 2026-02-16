@@ -1,0 +1,470 @@
+[INFO] Account: 03e0156b-0554-4ea6-ab78-9aea6d687934 (sandbox=True)
+[INFO] Sandbox cash OK: 26191.03 rub
+[OK] SBER BBG004730N88 lot=1 lot_cost≈303.01
+[OK] GAZP BBG004730RP0 lot=10 lot_cost≈1229.40
+[SKIP] LKOH lot_cost≈5326.00 > 3500.00
+[OK] GMKN BBG004731489 lot=10 lot_cost≈1599.20
+[OK] TATN BBG004RVFFC0 lot=1 lot_cost≈550.10
+[OK] NVTK BBG00475KKY8 lot=1 lot_cost≈1207.40
+[OK] ROSN BBG004731354 lot=1 lot_cost≈390.80
+[OK] ALRS BBG004S68B31 lot=10 lot_cost≈420.70
+[INFO] Tradeable FIGIs: ['BBG004730N88', 'BBG004730RP0', 'BBG004731489', 'BBG004RVFFC0', 'BBG00475KKY8', 'BBG004731354', 'BBG004S68B31']
+[HB] alive | utc=2026-01-21T07:27:17.179356+00:00
+[SIGNAL] BUY SBER (BBG004730N88) @ 303.02 | cash≈26191.03 RUB | mean_reversion last<303.4886
+[ORDER] BUY SBER (BBG004730N88) qty=1 price=303.01 | cash≈26191.03 RUB (client_uid=09a9a357-1d1d-44a2-8a87-4a31a173b0b3)
+[SIGNAL] BUY GAZP (BBG004730RP0) @ 122.9 | cash≈26191.03 RUB | mean_reversion last<123.0923
+[ORDER] BUY GAZP (BBG004730RP0) qty=1 price=122.9 | cash≈26191.03 RUB (client_uid=1a29714d-898b-49bf-96ec-91bcae59f190)
+[SIGNAL] BUY GMKN (BBG004731489) @ 159.9 | cash≈26191.03 RUB | mean_reversion last<159.9368
+[ORDER] BUY GMKN (BBG004731489) qty=1 price=159.9 | cash≈26191.03 RUB (client_uid=81238ff8-387e-47ee-b63c-9b3129d84f44)
+[SIGNAL] BUY TATN (BBG004RVFFC0) @ 550.2 | cash≈26191.03 RUB | mean_reversion last<551.4505
+[ORDER] BUY TATN (BBG004RVFFC0) qty=1 price=550.2 | cash≈26191.03 RUB (client_uid=a082883a-15f9-4a78-bd4a-f9c28104b9a0)
+[SIGNAL] BUY NVTK (BBG00475KKY8) @ 1207.4 | cash≈26191.03 RUB | mean_reversion last<1208.3504
+db35d2178ab3363db5dd6c27c5416a91 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 1/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='db35d2178ab3363db5dd6c27c5416a91', ratelimit_limit='200, 200;w=60', ratelimit_remaining=186, ratelimit_reset=40, message='Not enough balance'))
+6d5f37a94cc53e4a3f42c25667462e6e PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 2/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='6d5f37a94cc53e4a3f42c25667462e6e', ratelimit_limit='200, 200;w=60', ratelimit_remaining=185, ratelimit_reset=39, message='Not enough balance'))
+b0ff7a4adab9e269d759cf63abbd7895 PostSandboxOrder INVALID_ARGUMENT 30034
+[WARN] API error (attempt 3/3): (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='b0ff7a4adab9e269d759cf63abbd7895', ratelimit_limit='200, 200;w=60', ratelimit_remaining=184, ratelimit_reset=37, message='Not enough balance'))
+[WARN] post_order BUY failed: (<StatusCode.INVALID_ARGUMENT: (3, 'invalid argument')>, '30034', Metadata(tracking_id='b0ff7a4adab9e269d759cf63abbd7895', ratelimit_limit='200, 200;w=60', ratelimit_remaining=184, ratelimit_reset=37, message='Not enough balance'))
+[SIGNAL] BUY ROSN (BBG004731354) @ 390.95 | cash≈26191.03 RUB | mean_reversion last<391.4232
+[ORDER] BUY ROSN (BBG004731354) qty=1 price=390.90000000000003 | cash≈26191.03 RUB (client_uid=6da8847e-aa59-475b-802e-5e09779fd66f)
+[SIGNAL] BUY ALRS (BBG004S68B31) @ 42.07 | cash≈26191.03 RUB | mean_reversion last<42.2338
+[ORDER] BUY ALRS (BBG004S68B31) qty=1 price=42.07 | cash≈26191.03 RUB (client_uid=9cf27f68-1ded-456d-bf3d-12ab9f5653d2)
+[HB] alive | utc=2026-01-21T07:32:17.949256+00:00
+[HB] alive | utc=2026-01-21T07:37:17.952599+00:00
+[HB] alive | utc=2026-01-21T07:42:17.956377+00:00
+[HB] alive | utc=2026-01-21T07:47:17.960754+00:00
+[HB] alive | utc=2026-01-21T07:52:17.965093+00:00
+[HB] alive | utc=2026-01-21T07:57:17.968337+00:00
+[HB] alive | utc=2026-01-21T08:02:17.972480+00:00
+[HB] alive | utc=2026-01-21T08:07:17.976921+00:00
+[HB] alive | utc=2026-01-21T08:12:17.980567+00:00
+[HB] alive | utc=2026-01-21T08:17:17.984728+00:00
+[HB] alive | utc=2026-01-21T08:22:17.988876+00:00
+[HB] alive | utc=2026-01-21T08:27:17.993255+00:00
+[HB] alive | utc=2026-01-21T08:32:17.996931+00:00
+[HB] alive | utc=2026-01-21T08:37:18.001371+00:00
+[HB] alive | utc=2026-01-21T08:42:18.005429+00:00
+[HB] alive | utc=2026-01-21T08:47:18.009253+00:00
+[HB] alive | utc=2026-01-21T08:52:18.012858+00:00
+[HB] alive | utc=2026-01-21T08:57:18.016455+00:00
+[HB] alive | utc=2026-01-21T09:02:18.019815+00:00
+[HB] alive | utc=2026-01-21T09:07:18.023093+00:00
+[HB] alive | utc=2026-01-21T09:12:18.027225+00:00
+[HB] alive | utc=2026-01-21T09:17:18.031268+00:00
+[HB] alive | utc=2026-01-21T09:22:18.035525+00:00
+[HB] alive | utc=2026-01-21T09:27:18.039488+00:00
+[HB] alive | utc=2026-01-21T09:32:18.042887+00:00
+[HB] alive | utc=2026-01-21T09:37:18.046531+00:00
+[HB] alive | utc=2026-01-21T09:42:18.049544+00:00
+[HB] alive | utc=2026-01-21T09:47:18.053960+00:00
+[HB] alive | utc=2026-01-21T09:52:18.058789+00:00
+[HB] alive | utc=2026-01-21T09:57:18.063365+00:00
+[HB] alive | utc=2026-01-21T10:02:18.067101+00:00
+[HB] alive | utc=2026-01-21T10:07:18.071668+00:00
+[HB] alive | utc=2026-01-21T10:12:18.075425+00:00
+[HB] alive | utc=2026-01-21T10:17:18.080152+00:00
+[HB] alive | utc=2026-01-21T10:22:18.083562+00:00
+[HB] alive | utc=2026-01-21T10:27:18.086888+00:00
+[HB] alive | utc=2026-01-21T10:32:18.090811+00:00
+[HB] alive | utc=2026-01-21T10:37:18.094068+00:00
+[HB] alive | utc=2026-01-21T10:42:18.098470+00:00
+[HB] alive | utc=2026-01-21T10:47:18.102513+00:00
+[HB] alive | utc=2026-01-21T10:52:18.106701+00:00
+[HB] alive | utc=2026-01-21T10:57:18.110949+00:00
+[HB] alive | utc=2026-01-21T11:02:18.114551+00:00
+[HB] alive | utc=2026-01-21T11:07:18.117691+00:00
+[HB] alive | utc=2026-01-21T11:12:18.121221+00:00
+[HB] alive | utc=2026-01-21T11:17:18.125578+00:00
+[HB] alive | utc=2026-01-21T11:22:18.130445+00:00
+[HB] alive | utc=2026-01-21T11:27:18.134420+00:00
+[HB] alive | utc=2026-01-21T11:32:18.139020+00:00
+[HB] alive | utc=2026-01-21T11:37:18.143557+00:00
+[HB] alive | utc=2026-01-21T11:42:18.147652+00:00
+[HB] alive | utc=2026-01-21T11:47:18.151895+00:00
+[HB] alive | utc=2026-01-21T11:52:18.156359+00:00
+[HB] alive | utc=2026-01-21T11:57:18.159743+00:00
+[HB] alive | utc=2026-01-21T12:02:18.162876+00:00
+[HB] alive | utc=2026-01-21T12:07:18.166926+00:00
+[HB] alive | utc=2026-01-21T12:12:18.171058+00:00
+[HB] alive | utc=2026-01-21T12:17:18.175936+00:00
+[HB] alive | utc=2026-01-21T12:22:18.180146+00:00
+[HB] alive | utc=2026-01-21T12:27:18.184822+00:00
+[HB] alive | utc=2026-01-21T12:32:18.188209+00:00
+[HB] alive | utc=2026-01-21T12:37:18.192437+00:00
+[HB] alive | utc=2026-01-21T12:42:18.196548+00:00
+[HB] alive | utc=2026-01-21T12:47:18.200739+00:00
+[HB] alive | utc=2026-01-21T12:52:18.204603+00:00
+[HB] alive | utc=2026-01-21T12:57:18.208075+00:00
+[HB] alive | utc=2026-01-21T13:02:18.212581+00:00
+[HB] alive | utc=2026-01-21T13:07:18.216643+00:00
+[HB] alive | utc=2026-01-21T13:12:18.220392+00:00
+[HB] alive | utc=2026-01-21T13:17:18.223837+00:00
+[HB] alive | utc=2026-01-21T13:22:18.228080+00:00
+[HB] alive | utc=2026-01-21T13:27:18.231579+00:00
+[HB] alive | utc=2026-01-21T13:32:18.235845+00:00
+[HB] alive | utc=2026-01-21T13:37:18.239986+00:00
+[HB] alive | utc=2026-01-21T13:42:18.244393+00:00
+[HB] alive | utc=2026-01-21T13:47:18.248772+00:00
+[HB] alive | utc=2026-01-21T13:52:18.253207+00:00
+[HB] alive | utc=2026-01-21T13:57:18.256816+00:00
+[HB] alive | utc=2026-01-21T14:02:18.261129+00:00
+[HB] alive | utc=2026-01-21T14:07:18.264658+00:00
+[HB] alive | utc=2026-01-21T14:12:18.267445+00:00
+[HB] alive | utc=2026-01-21T14:17:18.272597+00:00
+[HB] alive | utc=2026-01-21T14:22:18.276462+00:00
+[HB] alive | utc=2026-01-21T14:27:18.280134+00:00
+[HB] alive | utc=2026-01-21T14:32:18.283605+00:00
+[HB] alive | utc=2026-01-21T14:37:18.287876+00:00
+[HB] alive | utc=2026-01-21T14:42:18.292429+00:00
+[HB] alive | utc=2026-01-21T14:47:18.296078+00:00
+[HB] alive | utc=2026-01-21T14:52:18.300821+00:00
+[HB] alive | utc=2026-01-21T14:57:18.304821+00:00
+[HB] alive | utc=2026-01-21T15:02:18.308692+00:00
+[HB] alive | utc=2026-01-21T15:07:18.313377+00:00
+[HB] alive | utc=2026-01-21T15:12:18.317430+00:00
+[HB] alive | utc=2026-01-21T15:17:18.322353+00:00
+[HB] alive | utc=2026-01-21T15:22:18.325711+00:00
+[HB] alive | utc=2026-01-21T15:27:18.329836+00:00
+[HB] alive | utc=2026-01-21T15:32:18.334131+00:00
+[HB] alive | utc=2026-01-21T15:37:18.339056+00:00
+abe908292601be4690040fc8a60a6534 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='abe908292601be4690040fc8a60a6534', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=40, message='Order not found'))
+c1b3eaa10d4bd540ce024f87d7abd6bd CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='c1b3eaa10d4bd540ce024f87d7abd6bd', ratelimit_limit='200, 200;w=60', ratelimit_remaining=198, ratelimit_reset=39, message='Order not found'))
+2594ba40c06e10f78d8af7f3a9605423 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='2594ba40c06e10f78d8af7f3a9605423', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=37, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='2594ba40c06e10f78d8af7f3a9605423', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=37, message='Order not found'))
+8646e4454c118e9c409cb6118729a82e CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='8646e4454c118e9c409cb6118729a82e', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=37, message='Order not found'))
+3b1139ae07c1083f2cabab69d649cff5 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='3b1139ae07c1083f2cabab69d649cff5', ratelimit_limit='200, 200;w=60', ratelimit_remaining=195, ratelimit_reset=36, message='Order not found'))
+758d19f46e958b260ab6a4ec28828070 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='758d19f46e958b260ab6a4ec28828070', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=34, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='758d19f46e958b260ab6a4ec28828070', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=34, message='Order not found'))
+4f59caf1dc55aa27107ab4c1a38ed035 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='4f59caf1dc55aa27107ab4c1a38ed035', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=34, message='Order not found'))
+988426cf5ea31f5fd0793c74af164d6c CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='988426cf5ea31f5fd0793c74af164d6c', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=33, message='Order not found'))
+9c53ceb85345d5954f5e6bed6c38da4f CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='9c53ceb85345d5954f5e6bed6c38da4f', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=31, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='9c53ceb85345d5954f5e6bed6c38da4f', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=31, message='Order not found'))
+4ad5d43cd3c8ec805b380ff4df9dd604 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='4ad5d43cd3c8ec805b380ff4df9dd604', ratelimit_limit='200, 200;w=60', ratelimit_remaining=190, ratelimit_reset=31, message='Order not found'))
+c888b8fbf6cfb160cfccc9f65dbe5028 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='c888b8fbf6cfb160cfccc9f65dbe5028', ratelimit_limit='200, 200;w=60', ratelimit_remaining=189, ratelimit_reset=30, message='Order not found'))
+056181ae71aa254c2445eeabdb49264a CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='056181ae71aa254c2445eeabdb49264a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=188, ratelimit_reset=28, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='056181ae71aa254c2445eeabdb49264a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=188, ratelimit_reset=28, message='Order not found'))
+71f902aff07be8164c2c8689984be741 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='71f902aff07be8164c2c8689984be741', ratelimit_limit='200, 200;w=60', ratelimit_remaining=187, ratelimit_reset=28, message='Order not found'))
+e2f3689007c2121bdb119519ae019935 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='e2f3689007c2121bdb119519ae019935', ratelimit_limit='200, 200;w=60', ratelimit_remaining=186, ratelimit_reset=27, message='Order not found'))
+f84d06a38c459ba2bd72bc0d75c932d2 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='f84d06a38c459ba2bd72bc0d75c932d2', ratelimit_limit='200, 200;w=60', ratelimit_remaining=185, ratelimit_reset=25, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='f84d06a38c459ba2bd72bc0d75c932d2', ratelimit_limit='200, 200;w=60', ratelimit_remaining=185, ratelimit_reset=25, message='Order not found'))
+63221c40551b351f995bf20e7972ea5e CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='63221c40551b351f995bf20e7972ea5e', ratelimit_limit='200, 200;w=60', ratelimit_remaining=184, ratelimit_reset=25, message='Order not found'))
+b3e834672d738114176d8fa34bdb10f0 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='b3e834672d738114176d8fa34bdb10f0', ratelimit_limit='200, 200;w=60', ratelimit_remaining=183, ratelimit_reset=24, message='Order not found'))
+1c3f3f0e0ffbcea34fd93a965db2d59b CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='1c3f3f0e0ffbcea34fd93a965db2d59b', ratelimit_limit='200, 200;w=60', ratelimit_remaining=182, ratelimit_reset=22, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='1c3f3f0e0ffbcea34fd93a965db2d59b', ratelimit_limit='200, 200;w=60', ratelimit_remaining=182, ratelimit_reset=22, message='Order not found'))
+Daily report for 2026-01-21 (UTC)
+------------------------------------------------------------
+Events:
+  SIGNAL      : 7
+  SUBMIT      : 6
+
+No fills today.
+
+Last 15 events:
+  07:27:17 SIGNAL       SBER       BUY  lots=  1 price=303.0200 mean_reversion last<303.4886
+  07:27:17 SUBMIT       SBER       BUY  lots=  1 price=303.0100 limit_buy
+  07:27:17 SIGNAL       GAZP       BUY  lots=  1 price=122.9000 mean_reversion last<123.0923
+  07:27:18 SUBMIT       GAZP       BUY  lots=  1 price=122.9000 limit_buy
+  07:27:18 SIGNAL       GMKN       BUY  lots=  1 price=159.9000 mean_reversion last<159.9368
+  07:27:18 SUBMIT       GMKN       BUY  lots=  1 price=159.9000 limit_buy
+  07:27:18 SIGNAL       TATN       BUY  lots=  1 price=550.2000 mean_reversion last<551.4505
+  07:27:18 SUBMIT       TATN       BUY  lots=  1 price=550.2000 limit_buy
+  07:27:18 SIGNAL       NVTK       BUY  lots=  1 price=1207.4000 mean_reversion last<1208.3504
+  07:27:22 SIGNAL       ROSN       BUY  lots=  1 price=390.9500 mean_reversion last<391.4232
+  07:27:22 SUBMIT       ROSN       BUY  lots=  1 price=390.9000 limit_buy
+  07:27:22 SIGNAL       ALRS       BUY  lots=  1 price= 42.0700 mean_reversion last<42.2338
+  07:27:22 SUBMIT       ALRS       BUY  lots=  1 price= 42.0700 limit_buy
+
+f6e2288e597fa773d902df6c479d9717 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='f6e2288e597fa773d902df6c479d9717', ratelimit_limit='200, 200;w=60', ratelimit_remaining=181, ratelimit_reset=11, message='Order not found'))
+95ae63f4d57568ec0db7e9d5ba66d06e CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='95ae63f4d57568ec0db7e9d5ba66d06e', ratelimit_limit='200, 200;w=60', ratelimit_remaining=180, ratelimit_reset=10, message='Order not found'))
+4326a38ffb643d2de7cff9f7c6f0ed48 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='4326a38ffb643d2de7cff9f7c6f0ed48', ratelimit_limit='200, 200;w=60', ratelimit_remaining=179, ratelimit_reset=8, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='4326a38ffb643d2de7cff9f7c6f0ed48', ratelimit_limit='200, 200;w=60', ratelimit_remaining=179, ratelimit_reset=8, message='Order not found'))
+b82d6ae43b5b0d0651c04dbb38f00ee0 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='b82d6ae43b5b0d0651c04dbb38f00ee0', ratelimit_limit='200, 200;w=60', ratelimit_remaining=178, ratelimit_reset=8, message='Order not found'))
+8db735bd7ec2d1f2b278c11ce20de6d9 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='8db735bd7ec2d1f2b278c11ce20de6d9', ratelimit_limit='200, 200;w=60', ratelimit_remaining=177, ratelimit_reset=7, message='Order not found'))
+d989ac0210bc982987bad5d563a238be CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='d989ac0210bc982987bad5d563a238be', ratelimit_limit='200, 200;w=60', ratelimit_remaining=176, ratelimit_reset=5, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='d989ac0210bc982987bad5d563a238be', ratelimit_limit='200, 200;w=60', ratelimit_remaining=176, ratelimit_reset=5, message='Order not found'))
+20bbb177f93f6f22dd94a0a70253faea CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='20bbb177f93f6f22dd94a0a70253faea', ratelimit_limit='200, 200;w=60', ratelimit_remaining=175, ratelimit_reset=5, message='Order not found'))
+3d9606fb71737705c0d8a353ef728167 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='3d9606fb71737705c0d8a353ef728167', ratelimit_limit='200, 200;w=60', ratelimit_remaining=174, ratelimit_reset=4, message='Order not found'))
+cf919b60a50ef55e0b038141f1f8de4a CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='cf919b60a50ef55e0b038141f1f8de4a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=173, ratelimit_reset=2, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='cf919b60a50ef55e0b038141f1f8de4a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=173, ratelimit_reset=2, message='Order not found'))
+42727812c47a8bbed82f77f0216a57be CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='42727812c47a8bbed82f77f0216a57be', ratelimit_limit='200, 200;w=60', ratelimit_remaining=172, ratelimit_reset=2, message='Order not found'))
+f5614dd739c2611581b250d9a8f7c810 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='f5614dd739c2611581b250d9a8f7c810', ratelimit_limit='200, 200;w=60', ratelimit_remaining=171, ratelimit_reset=1, message='Order not found'))
+3e0da1761478a842cdc1f22310fcc4d5 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='3e0da1761478a842cdc1f22310fcc4d5', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=59, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='3e0da1761478a842cdc1f22310fcc4d5', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=59, message='Order not found'))
+fc6302c41224f1d17c455eb6847bed69 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='fc6302c41224f1d17c455eb6847bed69', ratelimit_limit='200, 200;w=60', ratelimit_remaining=198, ratelimit_reset=59, message='Order not found'))
+29cc00688119b73ae5c16fa558dcf5e5 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='29cc00688119b73ae5c16fa558dcf5e5', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=58, message='Order not found'))
+b67eb3dc9c71be857f5d3e590b248b1d CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='b67eb3dc9c71be857f5d3e590b248b1d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=56, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='b67eb3dc9c71be857f5d3e590b248b1d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=56, message='Order not found'))
+8062b6c9291dd0ca0cbb78d3a58d3927 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='8062b6c9291dd0ca0cbb78d3a58d3927', ratelimit_limit='200, 200;w=60', ratelimit_remaining=195, ratelimit_reset=56, message='Order not found'))
+f2c5567a168252d4705a583a59ca61f1 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='f2c5567a168252d4705a583a59ca61f1', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=55, message='Order not found'))
+acdd460061c0b888b9aa74898d2e3a1c CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='acdd460061c0b888b9aa74898d2e3a1c', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=53, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='acdd460061c0b888b9aa74898d2e3a1c', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=53, message='Order not found'))
+bbadc360d2150a3cbbc8871e2b460fb6 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='bbadc360d2150a3cbbc8871e2b460fb6', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=43, message='Order not found'))
+26db3d35270216ed78e11f81e5e9200c CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='26db3d35270216ed78e11f81e5e9200c', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=42, message='Order not found'))
+7abe3a5e25b05f52812302f05ab99ae4 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='7abe3a5e25b05f52812302f05ab99ae4', ratelimit_limit='200, 200;w=60', ratelimit_remaining=190, ratelimit_reset=40, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='7abe3a5e25b05f52812302f05ab99ae4', ratelimit_limit='200, 200;w=60', ratelimit_remaining=190, ratelimit_reset=40, message='Order not found'))
+86c04159d54d98db31b3357f7a2d21dc CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='86c04159d54d98db31b3357f7a2d21dc', ratelimit_limit='200, 200;w=60', ratelimit_remaining=189, ratelimit_reset=40, message='Order not found'))
+d8d140283e78ffed8f772014ea675bcb CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='d8d140283e78ffed8f772014ea675bcb', ratelimit_limit='200, 200;w=60', ratelimit_remaining=188, ratelimit_reset=39, message='Order not found'))
+a9c630c79bde332a7ad08f126cc56972 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='a9c630c79bde332a7ad08f126cc56972', ratelimit_limit='200, 200;w=60', ratelimit_remaining=187, ratelimit_reset=37, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='a9c630c79bde332a7ad08f126cc56972', ratelimit_limit='200, 200;w=60', ratelimit_remaining=187, ratelimit_reset=37, message='Order not found'))
+b41e900d17f1ad9ba7e2c9c86a41025a CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='b41e900d17f1ad9ba7e2c9c86a41025a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=186, ratelimit_reset=37, message='Order not found'))
+07460de2d7fff908a0b346b78d348fa2 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='07460de2d7fff908a0b346b78d348fa2', ratelimit_limit='200, 200;w=60', ratelimit_remaining=185, ratelimit_reset=36, message='Order not found'))
+4568d11f1076302519fac363fc822d1c CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='4568d11f1076302519fac363fc822d1c', ratelimit_limit='200, 200;w=60', ratelimit_remaining=184, ratelimit_reset=34, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='4568d11f1076302519fac363fc822d1c', ratelimit_limit='200, 200;w=60', ratelimit_remaining=184, ratelimit_reset=34, message='Order not found'))
+794f1f5665421a64c62d1051f6ced072 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='794f1f5665421a64c62d1051f6ced072', ratelimit_limit='200, 200;w=60', ratelimit_remaining=183, ratelimit_reset=34, message='Order not found'))
+af059d7a15cb18e2996c2739add5f98d CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='af059d7a15cb18e2996c2739add5f98d', ratelimit_limit='200, 200;w=60', ratelimit_remaining=182, ratelimit_reset=33, message='Order not found'))
+1f593397b773cb461e25e52892444f50 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='1f593397b773cb461e25e52892444f50', ratelimit_limit='200, 200;w=60', ratelimit_remaining=181, ratelimit_reset=31, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='1f593397b773cb461e25e52892444f50', ratelimit_limit='200, 200;w=60', ratelimit_remaining=181, ratelimit_reset=31, message='Order not found'))
+2b3b19859cf639db852486e85a2ae768 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='2b3b19859cf639db852486e85a2ae768', ratelimit_limit='200, 200;w=60', ratelimit_remaining=180, ratelimit_reset=31, message='Order not found'))
+5e0f9577f584e9ee28b0164a80346c70 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='5e0f9577f584e9ee28b0164a80346c70', ratelimit_limit='200, 200;w=60', ratelimit_remaining=179, ratelimit_reset=30, message='Order not found'))
+781812a3c6c7f29e7863e7036fd6f548 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='781812a3c6c7f29e7863e7036fd6f548', ratelimit_limit='200, 200;w=60', ratelimit_remaining=178, ratelimit_reset=28, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='781812a3c6c7f29e7863e7036fd6f548', ratelimit_limit='200, 200;w=60', ratelimit_remaining=178, ratelimit_reset=28, message='Order not found'))
+9bf8b69bf12bab214d117ebe497d1231 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='9bf8b69bf12bab214d117ebe497d1231', ratelimit_limit='200, 200;w=60', ratelimit_remaining=177, ratelimit_reset=28, message='Order not found'))
+2860f7375ef566d1ac553892911e3c77 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='2860f7375ef566d1ac553892911e3c77', ratelimit_limit='200, 200;w=60', ratelimit_remaining=176, ratelimit_reset=27, message='Order not found'))
+93632847b44bf8a81869ebbacd3556be CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='93632847b44bf8a81869ebbacd3556be', ratelimit_limit='200, 200;w=60', ratelimit_remaining=175, ratelimit_reset=25, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='93632847b44bf8a81869ebbacd3556be', ratelimit_limit='200, 200;w=60', ratelimit_remaining=175, ratelimit_reset=25, message='Order not found'))
+8669feac0e508f60da6f36739dd16281 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='8669feac0e508f60da6f36739dd16281', ratelimit_limit='200, 200;w=60', ratelimit_remaining=174, ratelimit_reset=15, message='Order not found'))
+33796425333fe585ec6d3f007c5056a6 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='33796425333fe585ec6d3f007c5056a6', ratelimit_limit='200, 200;w=60', ratelimit_remaining=173, ratelimit_reset=14, message='Order not found'))
+88d483050c0257be72d6c9fd3d044aa0 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='88d483050c0257be72d6c9fd3d044aa0', ratelimit_limit='200, 200;w=60', ratelimit_remaining=172, ratelimit_reset=12, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='88d483050c0257be72d6c9fd3d044aa0', ratelimit_limit='200, 200;w=60', ratelimit_remaining=172, ratelimit_reset=12, message='Order not found'))
+aba296c36c96b784a6fe3bec89954f58 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='aba296c36c96b784a6fe3bec89954f58', ratelimit_limit='200, 200;w=60', ratelimit_remaining=171, ratelimit_reset=12, message='Order not found'))
+27df0768b0cab69824ce586a49021775 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='27df0768b0cab69824ce586a49021775', ratelimit_limit='200, 200;w=60', ratelimit_remaining=170, ratelimit_reset=11, message='Order not found'))
+42dd43fc3e556fac23ae26b9e9968ca5 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='42dd43fc3e556fac23ae26b9e9968ca5', ratelimit_limit='200, 200;w=60', ratelimit_remaining=169, ratelimit_reset=9, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='42dd43fc3e556fac23ae26b9e9968ca5', ratelimit_limit='200, 200;w=60', ratelimit_remaining=169, ratelimit_reset=9, message='Order not found'))
+01ff1980ff0244ca82eda069a3973692 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='01ff1980ff0244ca82eda069a3973692', ratelimit_limit='200, 200;w=60', ratelimit_remaining=168, ratelimit_reset=9, message='Order not found'))
+ba8f363ab4876e5dfc4fc423df458f23 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='ba8f363ab4876e5dfc4fc423df458f23', ratelimit_limit='200, 200;w=60', ratelimit_remaining=167, ratelimit_reset=7, message='Order not found'))
+6990fc56d6f35e9837e790fec4f07388 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='6990fc56d6f35e9837e790fec4f07388', ratelimit_limit='200, 200;w=60', ratelimit_remaining=166, ratelimit_reset=5, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='6990fc56d6f35e9837e790fec4f07388', ratelimit_limit='200, 200;w=60', ratelimit_remaining=166, ratelimit_reset=5, message='Order not found'))
+3790e7844c2f471a7a2ecb76e9acb968 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='3790e7844c2f471a7a2ecb76e9acb968', ratelimit_limit='200, 200;w=60', ratelimit_remaining=165, ratelimit_reset=5, message='Order not found'))
+c87ddbec0c87c6918e1ffdab26da5df3 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='c87ddbec0c87c6918e1ffdab26da5df3', ratelimit_limit='200, 200;w=60', ratelimit_remaining=164, ratelimit_reset=4, message='Order not found'))
+183ab43d511a7b41337b3bce0f29f0f1 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='183ab43d511a7b41337b3bce0f29f0f1', ratelimit_limit='200, 200;w=60', ratelimit_remaining=163, ratelimit_reset=2, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='183ab43d511a7b41337b3bce0f29f0f1', ratelimit_limit='200, 200;w=60', ratelimit_remaining=163, ratelimit_reset=2, message='Order not found'))
+75de739b620ac097c2624c92bee2dbe5 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='75de739b620ac097c2624c92bee2dbe5', ratelimit_limit='200, 200;w=60', ratelimit_remaining=162, ratelimit_reset=2, message='Order not found'))
+d3d326d789570293fc6c8883c8b98590 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='d3d326d789570293fc6c8883c8b98590', ratelimit_limit='200, 200;w=60', ratelimit_remaining=161, ratelimit_reset=1, message='Order not found'))
+db5a12ed6155151681face58d75e07b8 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='db5a12ed6155151681face58d75e07b8', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=59, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='db5a12ed6155151681face58d75e07b8', ratelimit_limit='200, 200;w=60', ratelimit_remaining=199, ratelimit_reset=59, message='Order not found'))
+ea0a6194bffde22f3cbdfd02898b1ac7 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='ea0a6194bffde22f3cbdfd02898b1ac7', ratelimit_limit='200, 200;w=60', ratelimit_remaining=198, ratelimit_reset=59, message='Order not found'))
+ccae4de3e3c759e5d81c1d1b738978e4 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='ccae4de3e3c759e5d81c1d1b738978e4', ratelimit_limit='200, 200;w=60', ratelimit_remaining=197, ratelimit_reset=58, message='Order not found'))
+aaf8587a61bfd2fdacb81503df8148dd CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='aaf8587a61bfd2fdacb81503df8148dd', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=56, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='aaf8587a61bfd2fdacb81503df8148dd', ratelimit_limit='200, 200;w=60', ratelimit_remaining=196, ratelimit_reset=56, message='Order not found'))
+50d4a94a31e5dbcf78fd68bbbcac8ef9 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='50d4a94a31e5dbcf78fd68bbbcac8ef9', ratelimit_limit='200, 200;w=60', ratelimit_remaining=195, ratelimit_reset=46, message='Order not found'))
+72f5f9d482432ff5091344f04ce0d8ca CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='72f5f9d482432ff5091344f04ce0d8ca', ratelimit_limit='200, 200;w=60', ratelimit_remaining=194, ratelimit_reset=45, message='Order not found'))
+fef9583d73ef3f6fcaf44cf617801a48 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='fef9583d73ef3f6fcaf44cf617801a48', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=43, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='fef9583d73ef3f6fcaf44cf617801a48', ratelimit_limit='200, 200;w=60', ratelimit_remaining=193, ratelimit_reset=43, message='Order not found'))
+35456d07090452bed5c4d6515b9022b9 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='35456d07090452bed5c4d6515b9022b9', ratelimit_limit='200, 200;w=60', ratelimit_remaining=192, ratelimit_reset=43, message='Order not found'))
+4a20c4d3123357231f6f094918ffeddc CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='4a20c4d3123357231f6f094918ffeddc', ratelimit_limit='200, 200;w=60', ratelimit_remaining=191, ratelimit_reset=42, message='Order not found'))
+f1759dc2dc619c05c57390d3dc6d5e09 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='f1759dc2dc619c05c57390d3dc6d5e09', ratelimit_limit='200, 200;w=60', ratelimit_remaining=190, ratelimit_reset=40, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='f1759dc2dc619c05c57390d3dc6d5e09', ratelimit_limit='200, 200;w=60', ratelimit_remaining=190, ratelimit_reset=40, message='Order not found'))
+16cdd8333683e20ad604c23abc6445d8 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='16cdd8333683e20ad604c23abc6445d8', ratelimit_limit='200, 200;w=60', ratelimit_remaining=189, ratelimit_reset=40, message='Order not found'))
+8ae38911eafe3b2823d05b6bbca1e256 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='8ae38911eafe3b2823d05b6bbca1e256', ratelimit_limit='200, 200;w=60', ratelimit_remaining=188, ratelimit_reset=39, message='Order not found'))
+4c634460045a1d8eb9898063f93340bc CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='4c634460045a1d8eb9898063f93340bc', ratelimit_limit='200, 200;w=60', ratelimit_remaining=187, ratelimit_reset=37, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='4c634460045a1d8eb9898063f93340bc', ratelimit_limit='200, 200;w=60', ratelimit_remaining=187, ratelimit_reset=37, message='Order not found'))
+9c2e508133b1252ba81a609a064c21de CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='9c2e508133b1252ba81a609a064c21de', ratelimit_limit='200, 200;w=60', ratelimit_remaining=186, ratelimit_reset=37, message='Order not found'))
+308ee95a8308789fa0900472c452d6df CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='308ee95a8308789fa0900472c452d6df', ratelimit_limit='200, 200;w=60', ratelimit_remaining=185, ratelimit_reset=36, message='Order not found'))
+940d9f53c71ef8b798d9ca124fb25fca CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='940d9f53c71ef8b798d9ca124fb25fca', ratelimit_limit='200, 200;w=60', ratelimit_remaining=184, ratelimit_reset=34, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='940d9f53c71ef8b798d9ca124fb25fca', ratelimit_limit='200, 200;w=60', ratelimit_remaining=184, ratelimit_reset=34, message='Order not found'))
+fea7fbce5df25da70b4fcbc96f1c4e85 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='fea7fbce5df25da70b4fcbc96f1c4e85', ratelimit_limit='200, 200;w=60', ratelimit_remaining=183, ratelimit_reset=34, message='Order not found'))
+c3887afdf2019e48609e184335769f34 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='c3887afdf2019e48609e184335769f34', ratelimit_limit='200, 200;w=60', ratelimit_remaining=182, ratelimit_reset=33, message='Order not found'))
+16614439f364fff25d4ac18cc7da4092 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='16614439f364fff25d4ac18cc7da4092', ratelimit_limit='200, 200;w=60', ratelimit_remaining=181, ratelimit_reset=31, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='16614439f364fff25d4ac18cc7da4092', ratelimit_limit='200, 200;w=60', ratelimit_remaining=181, ratelimit_reset=31, message='Order not found'))
+dfa0fea6e0fd3891d0920d9b30ca9944 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='dfa0fea6e0fd3891d0920d9b30ca9944', ratelimit_limit='200, 200;w=60', ratelimit_remaining=180, ratelimit_reset=31, message='Order not found'))
+2eba6c08d80b22242100f5215eb056ff CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='2eba6c08d80b22242100f5215eb056ff', ratelimit_limit='200, 200;w=60', ratelimit_remaining=179, ratelimit_reset=30, message='Order not found'))
+[INFO] Stopped by user (Ctrl+C). Trying to flatten...
+3f504c9f31c3602888a9e86b458bc32a CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='3f504c9f31c3602888a9e86b458bc32a', ratelimit_limit='200, 200;w=60', ratelimit_remaining=178, ratelimit_reset=28, message='Order not found'))
+1aa34da24f1f4a56e470112ea93b198b CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='1aa34da24f1f4a56e470112ea93b198b', ratelimit_limit='200, 200;w=60', ratelimit_remaining=177, ratelimit_reset=27, message='Order not found'))
+52ccc65df8f63accdc5fd7a8be51bda8 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='52ccc65df8f63accdc5fd7a8be51bda8', ratelimit_limit='200, 200;w=60', ratelimit_remaining=176, ratelimit_reset=25, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='52ccc65df8f63accdc5fd7a8be51bda8', ratelimit_limit='200, 200;w=60', ratelimit_remaining=176, ratelimit_reset=25, message='Order not found'))
+9a5933bfc513b25c5021f424091cba43 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='9a5933bfc513b25c5021f424091cba43', ratelimit_limit='200, 200;w=60', ratelimit_remaining=175, ratelimit_reset=25, message='Order not found'))
+e66c6ea404b5a4748147ce4ebeaa379e CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 2/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='e66c6ea404b5a4748147ce4ebeaa379e', ratelimit_limit='200, 200;w=60', ratelimit_remaining=174, ratelimit_reset=24, message='Order not found'))
+8f5769ba848e4d7046f848a22d6d7b77 CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 3/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='8f5769ba848e4d7046f848a22d6d7b77', ratelimit_limit='200, 200;w=60', ratelimit_remaining=173, ratelimit_reset=22, message='Order not found'))
+[WARN] cancel_order failed: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='8f5769ba848e4d7046f848a22d6d7b77', ratelimit_limit='200, 200;w=60', ratelimit_remaining=173, ratelimit_reset=22, message='Order not found'))
+b3a0b851f1e033dbc2de80935d9952ca CancelSandboxOrder NOT_FOUND 50005
+[WARN] API error (attempt 1/3): (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='b3a0b851f1e033dbc2de80935d9952ca', ratelimit_limit='200, 200;w=60', ratelimit_remaining=172, ratelimit_reset=22, message='Order not found'))
+Traceback (most recent call last):
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\tinkoff\invest\_errors.py", line 23, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\tinkoff\invest\services.py", line 1779, in cancel_sandbox_order
+    response, call = self.stub.CancelSandboxOrder.with_call(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\grpc\_channel.py", line 1198, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\grpc\_channel.py", line 1006, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)  # pytype: disable=not-instantiable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+        status = StatusCode.NOT_FOUND
+        details = "50005"
+        debug_error_string = "UNKNOWN:Error received from peer  {grpc_status:5, grpc_message:"50005"}"
+>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Александр\trade_bot\broker.py", line 235, in _call
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\deprecation.py", line 260, in _inner
+    return function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\tinkoff\invest\_errors.py", line 41, in wrapper
+    raise RequestError(status_code, details, metadata) from e
+tinkoff.invest.exceptions.RequestError: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='2eba6c08d80b22242100f5215eb056ff', ratelimit_limit='200, 200;w=60', ratelimit_remaining=179, ratelimit_reset=30, message='Order not found'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Александр\trade_bot\main.py", line 85, in main
+    broker.flatten_if_needed(account_id, cfg["schedule"])
+  File "C:\Users\Александр\trade_bot\broker.py", line 819, in flatten_if_needed
+    self.cancel_active_order(account_id, figi)
+  File "C:\Users\Александр\trade_bot\broker.py", line 538, in cancel_active_order
+    self._call(self._order_cancel_call(), account_id=account_id, order_id=oid)
+  File "C:\Users\Александр\trade_bot\broker.py", line 240, in _call
+    time.sleep(sleep)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\tinkoff\invest\_errors.py", line 23, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\tinkoff\invest\services.py", line 1779, in cancel_sandbox_order
+    response, call = self.stub.CancelSandboxOrder.with_call(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\grpc\_channel.py", line 1198, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\grpc\_channel.py", line 1006, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)  # pytype: disable=not-instantiable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+        status = StatusCode.NOT_FOUND
+        details = "50005"
+        debug_error_string = "UNKNOWN:Error received from peer  {grpc_message:"50005", grpc_status:5}"
+>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Александр\trade_bot\broker.py", line 235, in _call
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\deprecation.py", line 260, in _inner
+    return function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Александр\AppData\Local\Programs\Python\Python311\Lib\site-packages\tinkoff\invest\_errors.py", line 41, in wrapper
+    raise RequestError(status_code, details, metadata) from e
+tinkoff.invest.exceptions.RequestError: (<StatusCode.NOT_FOUND: (5, 'not found')>, '50005', Metadata(tracking_id='b3a0b851f1e033dbc2de80935d9952ca', ratelimit_limit='200, 200;w=60', ratelimit_remaining=172, ratelimit_reset=22, message='Order not found'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Александр\trade_bot\main.py", line 210, in <module>
+    main()
+  File "C:\Users\Александр\trade_bot\main.py", line 187, in main
+    broker.flatten_if_needed(account_id, cfg["schedule"])
+  File "C:\Users\Александр\trade_bot\broker.py", line 819, in flatten_if_needed
+    self.cancel_active_order(account_id, figi)
+  File "C:\Users\Александр\trade_bot\broker.py", line 538, in cancel_active_order
+    self._call(self._order_cancel_call(), account_id=account_id, order_id=oid)
+  File "C:\Users\Александр\trade_bot\broker.py", line 240, in _call
+    time.sleep(sleep)
+KeyboardInterrupt

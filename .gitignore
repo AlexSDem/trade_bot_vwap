@@ -1,0 +1,22 @@
+# --- Secrets / local config ---
+config.yaml
+.env
+
+# --- Logs (keep folder with .gitkeep) ---
+logs/*
+!logs/.gitkeep
+*.log
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# --- OS / editors ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

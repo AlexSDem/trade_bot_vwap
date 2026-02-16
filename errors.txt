@@ -1,0 +1,37 @@
+[INFO] Account: 03e0156b-0554-4ea6-ab78-9aea6d687934 (sandbox=True)
+[INFO] Sandbox cash OK: 22970.29 rub
+[OK] SBER BBG004730N88 lot=1 lot_cost≈306.64
+[OK] GAZP BBG004730RP0 lot=10 lot_cost≈1264.40
+[SKIP] LKOH lot_cost≈5396.50 > 3500.00
+[OK] GMKN BBG004731489 lot=10 lot_cost≈1613.80
+[OK] TATN BBG004RVFFC0 lot=1 lot_cost≈567.90
+[OK] NVTK BBG00475KKY8 lot=1 lot_cost≈1245.40
+[OK] ROSN BBG004731354 lot=1 lot_cost≈399.70
+[OK] ALRS BBG004S68B31 lot=10 lot_cost≈423.80
+[INFO] Tradeable FIGIs: ['BBG004730N88', 'BBG004730RP0', 'BBG004731489', 'BBG004RVFFC0', 'BBG00475KKY8', 'BBG004731354', 'BBG004S68B31']
+Portfolio snapshot (start)
+------------------------------------------------------------
+Cash: 22,970.29 RUB | Free≈22,970.29 | Reserved≈0.00
+Positions:
+  GMKN  lots=1   entry=N/A last=161.38
+  ALRS  lots=1   entry=N/A last=42.38
+[HB] alive | utc=2026-01-22T08:59:49.505992+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 22,970.29 RUB | Free≈22,970.29 | Reserved≈0.00
+Positions:
+  GMKN  lots=1   entry=N/A last=161.38
+  ALRS  lots=1   entry=N/A last=42.38
+[SIGNAL] BUY GAZP (BBG004730RP0) last=126.32 limit=126.4275 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<126.4275 edge_atr=1.979
+[SIGNAL] BUY GAZP (BBG004730RP0) last=126.32 limit=126.4370 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<126.4370 edge_atr=2.156
+[SIGNAL] BUY NVTK (BBG00475KKY8) last=1241.8 limit=1242.9631 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<1242.9631 edge_atr=1.596
+[SIGNAL] BUY GAZP (BBG004730RP0) last=126.39 limit=126.4348 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<126.4348 edge_atr=0.765
+[SIGNAL] BUY NVTK (BBG00475KKY8) last=1240.2 limit=1242.7858 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<1242.7858 edge_atr=3.176
+[SIGNAL] BUY GAZP (BBG004730RP0) last=126.39 limit=126.4404 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<126.4404 edge_atr=0.861
+[SIGNAL] BUY NVTK (BBG00475KKY8) last=1240.2 limit=1242.7699 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<1242.7699 edge_atr=3.156
+[HB] alive | utc=2026-01-22T09:05:22.371498+00:00
+[SIGNAL] BUY GAZP (BBG004730RP0) last=126.41 limit=126.4442 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<126.4442 edge_atr=0.607
+[SIGNAL] BUY NVTK (BBG00475KKY8) last=1238.4 limit=1242.3799 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<1242.3799 edge_atr=4.038
+[SIGNAL] BUY ROSN (BBG004731354) last=399.05 limit=399.1106 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<399.1106 edge_atr=0.253
+[SIGNAL] BUY GAZP (BBG004730RP0) last=126.43 limit=126.4488 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<126.4488 edge_atr=0.347
+[SIGNAL] BUY NVTK (BBG00475KKY8) last=1241.0 limit=1242.1767 | cash≈22970.29 free≈22970.29 RUB | mean_reversion last<1242.1767 edge_atr=1.030

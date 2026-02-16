@@ -1,0 +1,71 @@
+broker:
+  use_sandbox: true
+  currency: "rub"
+  min_sandbox_cash_rub: 12000
+  log_file: "logs/bot.log"
+  class_code: "TQBR"
+  buy_aggressive_ticks: 1   # лимит близко к last (1 тик)
+  sell_aggressive_ticks: 1
+  trades_csv: "logs/trades.csv"
+
+  retry_tries: 3
+  retry_sleep_min: 1.0
+  retry_sleep_max: 10.0
+
+  sandbox_pay_in_rub: 100000.0
+
+universe:
+  tickers: ["SBER", "GAZP", "LKOH", "GMKN", "TATN", "NVTK", "ROSN", "ALRS"]
+
+schedule:
+  tz: "Europe/Moscow"
+  start_trade: "10:20"
+  stop_new_entries: "18:05"
+  flatten_time: "18:40"
+
+strategy:
+  lookback_minutes: 180
+  k_atr: 1.2
+  take_profit_pct: 0.004
+  stop_loss_pct: 0.006
+  time_stop_minutes: 45
+
+  # entry filters (как было в улучшенной версии)
+  min_edge_atr: 0.05
+  max_rebound_atr: 0.25
+
+  # Variant A: time-stop changes behavior (no forced SELL by time)
+  time_stop_tighten_stop_loss_pct: 0.0025   # после 45 минут стоп подтягиваем до -0.25% от entry
+  breakeven_pct: 0.0005                     # безопасный выход на +0.05% от entry (примерно)
+  enable_time_stop_safe_exit: true          # разрешить закрытие, когда вернулись к VWAP/безубытку
+
+risk:
+  max_lot_cost_rub: 3500
+  max_day_loss_rub: 1000
+  max_trades_per_day: 3
+
+  # Main portfolio constraint
+  max_positions: 5
+
+  # Per-figi constraint (legacy)
+  max_active_orders_per_figi: 1
+
+  # NEW: portfolio-level constraints for pending orders
+  # Conservative default: same as max_positions
+  max_pending_buys_total: 5
+  max_active_orders_total: 5
+
+
+runtime:
+  sleep_sec: 55
+  heartbeat_sec: 300
+  portfolio_sec: 1800
+  error_sleep_sec: 10
+  max_consecutive_errors: 8
+
+  # NEW: cancel/expire limit orders if not filled within TTL
+  # (prevents "stuck all day" and frees slots for new signals)
+  order_ttl_sec: 120
+
+telegram:
+  enabled: true

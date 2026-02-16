@@ -1,0 +1,207 @@
+[INFO] Account: 03e0156b-0554-4ea6-ab78-9aea6d687934 (sandbox=True)
+[INFO] Sandbox cash OK: 24450.48 rub
+[OK] SBER BBG004730N88 lot=1 lot_cost≈306.51
+[OK] GAZP BBG004730RP0 lot=10 lot_cost≈1265.80
+[SKIP] LKOH lot_cost≈5399.00 > 3500.00
+[OK] GMKN BBG004731489 lot=10 lot_cost≈1622.80
+[OK] TATN BBG004RVFFC0 lot=1 lot_cost≈566.80
+[OK] NVTK BBG00475KKY8 lot=1 lot_cost≈1240.80
+[OK] ROSN BBG004731354 lot=1 lot_cost≈399.85
+[OK] ALRS BBG004S68B31 lot=10 lot_cost≈424.80
+[INFO] Tradeable FIGIs: ['BBG004730N88', 'BBG004730RP0', 'BBG004731489', 'BBG004RVFFC0', 'BBG00475KKY8', 'BBG004731354', 'BBG004S68B31']
+Portfolio snapshot (start)
+------------------------------------------------------------
+Cash: 24,450.48 RUB | Free≈24,450.48 | Reserved≈0.00
+Positions:
+  TATN  lots=1   entry=566.8000 last=566.8000 PnL=+0.00 RUB (+0.00%)
+[HB] alive | utc=2026-01-22T10:37:07.025141+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 24,450.48 RUB | Free≈24,450.48 | Reserved≈0.00
+Positions:
+  TATN  lots=1   entry=566.8000 last=566.8000 PnL=+0.00 RUB (+0.00%)
+[SIGNAL] BUY NVTK (BBG00475KKY8) last=1241.0 limit=1243.4381 | cash≈24450.48 free≈24450.48 RUB | mean_reversion last<1243.4381 edge_atr=5.505
+[ORDER] BUY NVTK (BBG00475KKY8) qty=1 price=1243.6000000000001 | cash≈24450.48 free≈23206.88 RUB (client_uid=a6389f56-2556-42d2-ae42-94969e5804a6)
+[HB] alive | utc=2026-01-22T10:42:40.436722+00:00
+[SIGNAL] BUY SBER (BBG004730N88) last=306.49 limit=306.5384 | cash≈23208.86 free≈23208.86 RUB | mean_reversion last<306.5384 edge_atr=0.869
+[ORDER] BUY SBER (BBG004730N88) qty=1 price=306.54 | cash≈23208.86 free≈22902.32 RUB (client_uid=300e60a1-1e24-433a-871b-9485924a96fd)
+[SIGNAL] BUY GAZP (BBG004730RP0) last=126.46 limit=126.5010 | cash≈22902.21 free≈22902.21 RUB | mean_reversion last<126.5010 edge_atr=0.766
+[ORDER] BUY GAZP (BBG004730RP0) qty=1 price=126.51 | cash≈22902.21 free≈21637.11 RUB (client_uid=c51c4f8f-6162-41e5-8c7f-faae500ef751)
+[SIGNAL] BUY ROSN (BBG004731354) last=399.65 limit=399.7358 | cash≈22902.21 free≈21637.11 RUB | mean_reversion last<399.7358 edge_atr=0.471
+[ORDER] BUY ROSN (BBG004731354) qty=1 price=399.75 | cash≈22902.21 free≈21237.36 RUB (client_uid=29496e86-126b-4f2c-9b10-ec278032149a)
+[HB] alive | utc=2026-01-22T10:48:02.539432+00:00
+[HB] alive | utc=2026-01-22T10:53:02.545421+00:00
+[HB] alive | utc=2026-01-22T10:58:02.550274+00:00
+[HB] alive | utc=2026-01-22T11:03:02.555841+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 21,236.73 RUB | Free≈21,236.73 | Reserved≈0.00
+Positions:
+  SBER  lots=1   entry=306.6100 last=306.5200 PnL=-0.09 RUB (-0.03%)
+  TATN  lots=1   entry=566.8000 last=564.5000 PnL=-2.30 RUB (-0.41%)
+  NVTK  lots=1   entry=1241.6000 last=1236.8000 PnL=-4.80 RUB (-0.39%)
+  ROSN  lots=1   entry=400.0500 last=400.0500 PnL=+0.00 RUB (+0.00%)
+[HB] alive | utc=2026-01-22T11:08:02.988236+00:00
+[HB] alive | utc=2026-01-22T11:13:02.994699+00:00
+[HB] alive | utc=2026-01-22T11:18:02.999882+00:00
+[HB] alive | utc=2026-01-22T11:23:03.006264+00:00
+[HB] alive | utc=2026-01-22T11:28:03.011164+00:00
+[HB] alive | utc=2026-01-22T11:33:03.017036+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 21,236.73 RUB | Free≈21,236.73 | Reserved≈0.00
+Positions:
+  SBER  lots=1   entry=306.6100 last=306.6900 PnL=+0.08 RUB (+0.03%)
+  TATN  lots=1   entry=566.8000 last=566.3000 PnL=-0.50 RUB (-0.09%)
+  NVTK  lots=1   entry=1241.6000 last=1240.4000 PnL=-1.20 RUB (-0.10%)
+  ROSN  lots=1   entry=400.0500 last=400.3000 PnL=+0.25 RUB (+0.06%)
+[HB] alive | utc=2026-01-22T11:38:03.435341+00:00
+[HB] alive | utc=2026-01-22T11:43:03.441671+00:00
+[HB] alive | utc=2026-01-22T11:48:03.447710+00:00
+[HB] alive | utc=2026-01-22T11:53:03.453174+00:00
+[HB] alive | utc=2026-01-22T11:58:03.459712+00:00
+[HB] alive | utc=2026-01-22T12:03:03.464910+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 21,236.73 RUB | Free≈21,236.73 | Reserved≈0.00
+Positions:
+  SBER  lots=1   entry=306.6100 last=306.6700 PnL=+0.06 RUB (+0.02%)
+  TATN  lots=1   entry=566.8000 last=561.7000 PnL=-5.10 RUB (-0.90%)
+  NVTK  lots=1   entry=1241.6000 last=1239.2000 PnL=-2.40 RUB (-0.19%)
+  ROSN  lots=1   entry=400.0500 last=398.9000 PnL=-1.15 RUB (-0.29%)
+[HB] alive | utc=2026-01-22T12:08:03.906779+00:00
+[HB] alive | utc=2026-01-22T12:13:03.913252+00:00
+[HB] alive | utc=2026-01-22T12:18:03.918929+00:00
+[HB] alive | utc=2026-01-22T12:23:03.924707+00:00
+[HB] alive | utc=2026-01-22T12:28:03.929510+00:00
+[HB] alive | utc=2026-01-22T12:33:03.935719+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 21,236.73 RUB | Free≈21,236.73 | Reserved≈0.00
+Positions:
+  SBER  lots=1   entry=306.6100 last=306.7400 PnL=+0.13 RUB (+0.04%)
+  TATN  lots=1   entry=566.8000 last=562.0000 PnL=-4.80 RUB (-0.85%)
+  NVTK  lots=1   entry=1241.6000 last=1242.8000 PnL=+1.20 RUB (+0.10%)
+  ROSN  lots=1   entry=400.0500 last=399.0000 PnL=-1.05 RUB (-0.26%)
+[HB] alive | utc=2026-01-22T12:38:04.331369+00:00
+[HB] alive | utc=2026-01-22T12:43:04.336678+00:00
+[HB] alive | utc=2026-01-22T12:48:04.342534+00:00
+[HB] alive | utc=2026-01-22T12:53:04.347262+00:00
+[HB] alive | utc=2026-01-22T12:58:04.353849+00:00
+[HB] alive | utc=2026-01-22T13:03:04.360565+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 21,236.73 RUB | Free≈21,236.73 | Reserved≈0.00
+Positions:
+  SBER  lots=1   entry=306.6100 last=306.7100 PnL=+0.10 RUB (+0.03%)
+  TATN  lots=1   entry=566.8000 last=563.3000 PnL=-3.50 RUB (-0.62%)
+  NVTK  lots=1   entry=1241.6000 last=1241.4000 PnL=-0.20 RUB (-0.02%)
+  ROSN  lots=1   entry=400.0500 last=399.8000 PnL=-0.25 RUB (-0.06%)
+[HB] alive | utc=2026-01-22T13:08:04.763549+00:00
+[HB] alive | utc=2026-01-22T13:13:04.770565+00:00
+[HB] alive | utc=2026-01-22T13:18:04.776145+00:00
+[HB] alive | utc=2026-01-22T13:23:04.782173+00:00
+[HB] alive | utc=2026-01-22T13:28:04.787252+00:00
+[HB] alive | utc=2026-01-22T13:33:04.792716+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 21,236.73 RUB | Free≈21,236.73 | Reserved≈0.00
+Positions:
+  SBER  lots=1   entry=306.6100 last=305.4300 PnL=-1.18 RUB (-0.38%)
+  TATN  lots=1   entry=566.8000 last=561.3000 PnL=-5.50 RUB (-0.97%)
+  NVTK  lots=1   entry=1241.6000 last=1232.6000 PnL=-9.00 RUB (-0.72%)
+  ROSN  lots=1   entry=400.0500 last=397.9500 PnL=-2.10 RUB (-0.52%)
+[HB] alive | utc=2026-01-22T13:38:05.189280+00:00
+[HB] alive | utc=2026-01-22T13:43:05.194993+00:00
+[HB] alive | utc=2026-01-22T13:48:05.200768+00:00
+[HB] alive | utc=2026-01-22T13:53:05.206447+00:00
+[HB] alive | utc=2026-01-22T13:58:05.211964+00:00
+[HB] alive | utc=2026-01-22T14:03:05.217506+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 21,236.73 RUB | Free≈21,236.73 | Reserved≈0.00
+Positions:
+  SBER  lots=1   entry=306.6100 last=305.1900 PnL=-1.42 RUB (-0.46%)
+  TATN  lots=1   entry=566.8000 last=560.7000 PnL=-6.10 RUB (-1.08%)
+  NVTK  lots=1   entry=1241.6000 last=1233.0000 PnL=-8.60 RUB (-0.69%)
+  ROSN  lots=1   entry=400.0500 last=396.9500 PnL=-3.10 RUB (-0.77%)
+[HB] alive | utc=2026-01-22T14:08:05.587375+00:00
+[HB] alive | utc=2026-01-22T14:13:05.593337+00:00
+[HB] alive | utc=2026-01-22T14:18:05.599467+00:00
+[HB] alive | utc=2026-01-22T14:23:05.603065+00:00
+[HB] alive | utc=2026-01-22T14:28:05.608270+00:00
+[HB] alive | utc=2026-01-22T14:33:05.614274+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 21,236.73 RUB | Free≈21,236.73 | Reserved≈0.00
+Positions:
+  SBER  lots=1   entry=306.6100 last=305.8600 PnL=-0.75 RUB (-0.24%)
+  TATN  lots=1   entry=566.8000 last=563.6000 PnL=-3.20 RUB (-0.56%)
+  NVTK  lots=1   entry=1241.6000 last=1233.0000 PnL=-8.60 RUB (-0.69%)
+  ROSN  lots=1   entry=400.0500 last=399.1000 PnL=-0.95 RUB (-0.24%)
+[HB] alive | utc=2026-01-22T14:38:06.003478+00:00
+[HB] alive | utc=2026-01-22T14:43:06.008567+00:00
+[HB] alive | utc=2026-01-22T14:48:06.014178+00:00
+[HB] alive | utc=2026-01-22T14:53:06.019188+00:00
+[HB] alive | utc=2026-01-22T14:58:06.025793+00:00
+[HB] alive | utc=2026-01-22T15:03:06.032053+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 21,236.73 RUB | Free≈21,236.73 | Reserved≈0.00
+Positions:
+  SBER  lots=1   entry=306.6100 last=306.6500 PnL=+0.04 RUB (+0.01%)
+  TATN  lots=1   entry=566.8000 last=565.0000 PnL=-1.80 RUB (-0.32%)
+  NVTK  lots=1   entry=1241.6000 last=1224.8000 PnL=-16.80 RUB (-1.35%)
+  ROSN  lots=1   entry=400.0500 last=397.7000 PnL=-2.35 RUB (-0.59%)
+[HB] alive | utc=2026-01-22T15:08:06.464260+00:00
+[HB] alive | utc=2026-01-22T15:13:06.469747+00:00
+[HB] alive | utc=2026-01-22T15:18:06.476024+00:00
+[HB] alive | utc=2026-01-22T15:23:06.481600+00:00
+[HB] alive | utc=2026-01-22T15:28:06.487152+00:00
+[HB] alive | utc=2026-01-22T15:33:06.492218+00:00
+Portfolio snapshot
+------------------------------------------------------------
+Cash: 21,236.73 RUB | Free≈21,236.73 | Reserved≈0.00
+Positions:
+  SBER  lots=1   entry=306.6100 last=306.5200 PnL=-0.09 RUB (-0.03%)
+  TATN  lots=1   entry=566.8000 last=563.7000 PnL=-3.10 RUB (-0.55%)
+  NVTK  lots=1   entry=1241.6000 last=1213.8000 PnL=-27.80 RUB (-2.24%)
+  ROSN  lots=1   entry=400.0500 last=397.4000 PnL=-2.65 RUB (-0.66%)
+[HB] alive | utc=2026-01-22T15:38:06.889398+00:00
+[ORDER] SELL SBER (BBG004730N88) qty=1 price=306.35 | cash≈21236.73 free≈21236.73 RUB (client_uid=61dab619-94ce-40ca-9e29-e6c56ef63c4c)
+[ORDER] SELL NVTK (BBG00475KKY8) qty=1 price=1215.2 | cash≈21236.73 free≈21236.73 RUB (client_uid=9ef23dab-2a6a-4e31-9206-83a5364f0718)
+[ORDER] SELL ROSN (BBG004731354) qty=1 price=397.05 | cash≈21236.73 free≈21236.73 RUB (client_uid=c2bab4aa-6975-4b5c-a01a-df0dc6c3a148)
+[ORDER] SELL TATN (BBG004RVFFC0) qty=1 price=563.1 | cash≈21236.73 free≈21236.73 RUB (client_uid=bcd5e88c-a7a3-4b06-a320-ec7b9a2873e4)
+Daily report for 2026-01-22 (UTC)
+------------------------------------------------------------
+Events:
+  SIGNAL      : 246
+  SUBMIT      : 14
+
+No fills today.
+
+Last 15 events:
+  10:34:06 SIGNAL       NVTK       BUY  lots=  1 price=1240.2000 mean_reversion last<1243.5647 edge_atr=6.198
+  10:35:01 SIGNAL       NVTK       BUY  lots=  1 price=1240.2000 mean_reversion last<1243.5647 edge_atr=6.198
+  10:35:57 SIGNAL       NVTK       BUY  lots=  1 price=1240.6000 mean_reversion last<1243.4263 edge_atr=4.946
+  10:37:07 SIGNAL       NVTK       BUY  lots=  1 price=1241.0000 mean_reversion last<1243.4381 edge_atr=5.505
+  10:37:08 SUBMIT       NVTK       BUY  lots=  1 price=1243.6000 limit_buy
+  10:42:40 SIGNAL       SBER       BUY  lots=  1 price=306.4900 mean_reversion last<306.5384 edge_atr=0.869
+  10:42:40 SUBMIT       SBER       BUY  lots=  1 price=306.5400 limit_buy
+  10:43:36 SIGNAL       GAZP       BUY  lots=  1 price=126.4600 mean_reversion last<126.5010 edge_atr=0.766
+  10:43:36 SUBMIT       GAZP       BUY  lots=  1 price=126.5100 limit_buy
+  10:43:37 SIGNAL       ROSN       BUY  lots=  1 price=399.6500 mean_reversion last<399.7358 edge_atr=0.471
+  10:43:37 SUBMIT       ROSN       BUY  lots=  1 price=399.7500 limit_buy
+  15:40:07 SUBMIT       SBER       SELL lots=  1 price=306.3500 limit_sell_to_close
+  15:40:07 SUBMIT       NVTK       SELL lots=  1 price=1215.2000 limit_sell_to_close
+  15:40:08 SUBMIT       ROSN       SELL lots=  1 price=397.0500 limit_sell_to_close
+  15:40:08 SUBMIT       TATN       SELL lots=  1 price=563.1000 limit_sell_to_close
+
+Portfolio snapshot (end)
+------------------------------------------------------------
+Cash: 22,757.77 RUB | Free≈22,757.77 | Reserved≈0.00
+Positions:
+  (no positions)
+[CANCEL] ROSN (BBG004731354) order_id=b9962f77-8195-4bbb-ac3f-93e045e536ef
+[CANCEL] TATN (BBG004RVFFC0) order_id=b62ede24-7cd6-467d-a200-82ae119cb49c
+[HB] alive | utc=2026-01-22T15:43:09.787903+00:00
