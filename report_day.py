@@ -56,6 +56,22 @@ def build_report(df: pd.DataFrame, day: date) -> str:
     lines = []
     lines.append(f"Daily report for {day.isoformat()} (UTC)")
     lines.append("-" * 60)
+    lines.append(f"Events total: {len(ddf)}")
+    lines.append("")
+
+    signals_cnt = int((ddf["event"] == "SIGNAL").sum())
+    submit_cnt = int((ddf["event"] == "SUBMIT").sum())
+    fill_cnt = int(ddf["event"].isin(["FILL", "PARTIAL_FILL"]).sum())
+    cancel_cnt = int((ddf["event"] == "CANCEL").sum())
+    reject_cnt = int((ddf["event"] == "REJECT").sum())
+    expire_cnt = int((ddf["event"] == "EXPIRE").sum())
+
+    lines.append("Summary:")
+    lines.append(
+        f"  signals={signals_cnt} | submits={submit_cnt} | fills={fill_cnt} "
+        f"| cancel={cancel_cnt} | reject={reject_cnt} | expire={expire_cnt}"
+    )
+    lines.append("")
 
     # Event counts
     lines.append("Events:")
@@ -82,7 +98,16 @@ def build_report(df: pd.DataFrame, day: date) -> str:
         # Estimate turnover (lots * price) - useful even without real PnL
         fills["turnover"] = fills["lots"].fillna(0) * fills["price"].fillna(0)
         turnover_total = fills["turnover"].sum()
-        lines.append(f"Turnover (approx): {turnover_total:,.2f}")
+        buy_turnover = fills.loc[fills["side"] == "BUY", "turnover"].sum()
+        sell_turnover = fills.loc[fills["side"] == "SELL", "turnover"].sum()
+        net_lots = fills.apply(
+            lambda r: (r["lots"] if r["side"] == "BUY" else (-r["lots"] if r["side"] == "SELL" else 0)),
+            axis=1,
+        ).sum()
+
+        lines.append(f"Turnover total (approx): {turnover_total:,.2f}")
+        lines.append(f"Turnover BUY/SELL: {buy_turnover:,.2f} / {sell_turnover:,.2f}")
+        lines.append(f"Net filled lots (BUY-SELL): {int(net_lots)}")
         lines.append("")
     else:
         lines.append("No fills today.")
@@ -96,6 +121,16 @@ def build_report(df: pd.DataFrame, day: date) -> str:
         for _, r in tail.iterrows():
             ts = r["ts_utc"].strftime("%H:%M:%S")
             lines.append(f"  {ts} {r['event']:6s} {r['ticker']:6s} {r['side']:4s} status={r['status']} reason={r['reason']}")
+        lines.append("")
+
+    # Top reasons to understand behavior
+    reasons = ddf["reason"].fillna("").astype(str).str.strip()
+    reasons = reasons[reasons != ""]
+    if not reasons.empty:
+        lines.append("Top reasons:")
+        rv = reasons.value_counts().head(10)
+        for k, v in rv.items():
+            lines.append(f"  {k:40s} {int(v)}")
         lines.append("")
 
     # Last 15 key events

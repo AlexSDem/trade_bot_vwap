@@ -3,6 +3,7 @@ broker:
   currency: "rub"
   min_sandbox_cash_rub: 12000
   log_file: "logs/bot.log"
+  key_log_file: "logs/key_events.log"
   class_code: "TQBR"
   buy_aggressive_ticks: 1   # лимит близко к last (1 тик)
   sell_aggressive_ticks: 1
@@ -62,6 +63,7 @@ runtime:
   portfolio_sec: 1800
   error_sleep_sec: 10
   max_consecutive_errors: 8
+  reports_dir: "logs/reports"
 
   # NEW: cancel/expire limit orders if not filled within TTL
   # (prevents "stuck all day" and frees slots for new signals)
@@ -69,3 +71,17 @@ runtime:
 
 telegram:
   enabled: true
+  compact_mode: true
+  send_startup: true
+  send_signals: false
+  send_orders: true
+  send_fills: true
+  send_pnl: true
+  send_portfolio_snapshots: false
+  send_daily_report: true
+  send_warnings: true
+  send_errors: true
+  send_service: true
+  send_rejects: true
+  send_cancels: false
+  send_expires: false

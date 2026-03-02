@@ -44,12 +44,27 @@ class Broker:
       - journal
       - order polling (sandbox/real)
     """
+    KEY_EVENT_MARKERS = (
+        "[ERROR]",
+        "[WARN]",
+        "[ORDER]",
+        "[FILL]",
+        "[PNL]",
+        "[CANCEL",
+        "[REJECT",
+        "[EXPIRE]",
+        "[SIGNAL]",
+        "Daily report",
+        "Portfolio snapshot",
+        "[INFO] Account:",
+    )
 
-    def __init__(self, client: Client, cfg: dict, notifier=None):
+    def __init__(self, client: Client, cfg: dict, notifier=None, notify_cfg: Optional[dict] = None):
         self.client = client
         self.cfg = cfg
         self.state = BotState()
         self.notifier = notifier
+        self.notify_cfg = notify_cfg or {}
 
         self._last_low_cash_warn: Dict[str, float] = {}
         self._reserved_rub_by_figi: Dict[str, float] = {}
@@ -60,11 +75,15 @@ class Broker:
         self.logger.setLevel(logging.INFO)
         self.logger.handlers.clear()
         log_path = cfg.get("log_file", "logs/bot.log")
-        fh = logging.FileHandler(log_path, encoding="utf-8")
-        fh.setLevel(logging.INFO)
-        fh.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
-        self.logger.addHandler(fh)
+        self.logger.addHandler(self._build_file_handler(log_path))
         self.logger.propagate = False
+
+        self.key_logger = logging.getLogger("bot.key_events")
+        self.key_logger.setLevel(logging.INFO)
+        self.key_logger.handlers.clear()
+        key_log_path = cfg.get("key_log_file", "logs/key_events.log")
+        self.key_logger.addHandler(self._build_file_handler(key_log_path))
+        self.key_logger.propagate = False
 
         self.currency = cfg.get("currency", "rub")
         self.use_sandbox = bool(cfg.get("use_sandbox", True))
@@ -84,8 +103,22 @@ class Broker:
         self.journal = TradeJournal(cfg.get("trades_csv", "logs/trades.csv"))
 
     # ---------- logging ----------
+    @staticmethod
+    def _build_file_handler(path: str) -> logging.FileHandler:
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+        fh = logging.FileHandler(path, encoding="utf-8")
+        fh.setLevel(logging.INFO)
+        fh.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+        return fh
+
+    @classmethod
+    def _is_key_event(cls, msg: str) -> bool:
+        return any(marker in msg for marker in cls.KEY_EVENT_MARKERS)
+
     def log(self, msg: str):
         self.logger.info(msg)
+        if self._is_key_event(msg):
+            self.key_logger.info(msg)
         print(msg)
 
     def notify(self, text: str, throttle_sec: float = 0.0):
@@ -95,6 +128,141 @@ class Broker:
             self.notifier.send(text, throttle_sec=throttle_sec)
         except Exception:
             pass
+
+    def _notify_enabled(self, category: str) -> bool:
+        compact_mode = bool(self.notify_cfg.get("compact_mode", True))
+        defaults_compact = {
+            "startup": True,
+            "signal": False,
+            "order": True,
+            "fill": True,
+            "pnl": True,
+            "portfolio": False,
+            "daily_report": True,
+            "warning": True,
+            "error": True,
+            "service": True,
+            "expire": False,
+            "cancel": False,
+            "reject": True,
+        }
+        defaults_verbose = {
+            **defaults_compact,
+            "signal": True,
+            "portfolio": True,
+            "expire": True,
+            "cancel": True,
+        }
+        defaults = defaults_compact if compact_mode else defaults_verbose
+        key_map = {
+            "startup": "send_startup",
+            "signal": "send_signals",
+            "order": "send_orders",
+            "fill": "send_fills",
+            "pnl": "send_pnl",
+            "portfolio": "send_portfolio_snapshots",
+            "daily_report": "send_daily_report",
+            "warning": "send_warnings",
+            "error": "send_errors",
+            "service": "send_service",
+            "expire": "send_expires",
+            "cancel": "send_cancels",
+            "reject": "send_rejects",
+        }
+        cfg_key = key_map.get(category)
+        if cfg_key and cfg_key in self.notify_cfg:
+            return bool(self.notify_cfg.get(cfg_key))
+        return bool(defaults.get(category, True))
+
+    def notify_event(self, category: str, text: str, throttle_sec: float = 0.0):
+        if not self._notify_enabled(category):
+            return
+        self.notify(text, throttle_sec=throttle_sec)
+
+    @staticmethod
+    def _fmt_rub(v: float) -> str:
+        return f"{float(v):,.2f} RUB"
+
+    def format_order_notification(self, side: str, figi: str, qty: int, price: float, cash: float, free: float) -> str:
+        ticker = self._ticker_for_figi(figi) or figi
+        return (
+            f"Order {side}\n"
+            f"Ticker: {ticker}\n"
+            f"Lots: {int(qty)}\n"
+            f"Price: {float(price):.4f}\n"
+            f"Cash: {self._fmt_rub(cash)} | Free: {self._fmt_rub(free)}"
+        )
+
+    def format_signal_notification(
+        self, action: str, figi: str, last: float, limit_price: float, cash: float, free: float, reason: str
+    ) -> str:
+        ticker = self._ticker_for_figi(figi) or figi
+        return (
+            f"Signal {action}\n"
+            f"Ticker: {ticker}\n"
+            f"Last: {float(last):.4f}\n"
+            f"Limit: {float(limit_price):.4f}\n"
+            f"Cash: {self._fmt_rub(cash)} | Free: {self._fmt_rub(free)}\n"
+            f"Reason: {reason}"
+        )
+
+    def format_fill_notification(self, side: str, figi: str, lots_executed: int, avg_price: Optional[float]) -> str:
+        ticker = self._ticker_for_figi(figi) or figi
+        px = "N/A" if avg_price is None else f"{float(avg_price):.4f}"
+        return f"Fill {side}\nTicker: {ticker}\nLots: {int(lots_executed)}\nPrice: {px}"
+
+    def format_pnl_notification(self, figi: str, pnl_abs: float, pnl_pct: float, entry: float, exit_: float) -> str:
+        ticker = self._ticker_for_figi(figi) or figi
+        return (
+            f"PnL {ticker}\n"
+            f"Result: {float(pnl_abs):+.2f} RUB ({float(pnl_pct):+.2f}%)\n"
+            f"Entry: {float(entry):.4f}\n"
+            f"Exit: {float(exit_):.4f}"
+        )
+
+    def build_portfolio_status_telegram(self, account_id: str, figis: List[str], title: str = "Portfolio") -> str:
+        self.refresh_account_snapshot(account_id, figis)
+
+        cash = float(self.get_cached_cash_rub(account_id))
+        reserved = float(self._reserved_rub_total())
+        free = float(max(0.0, cash - reserved))
+
+        lines: List[str] = [
+            title,
+            f"Cash: {self._fmt_rub(cash)}",
+            f"Free: {self._fmt_rub(free)}",
+            f"Reserved: {self._fmt_rub(reserved)}",
+            "Positions:",
+        ]
+
+        any_pos = False
+        for figi in figis:
+            fs = self.state.get(figi)
+            lots = int(fs.position_lots)
+            if lots <= 0:
+                continue
+            any_pos = True
+
+            ticker = self._ticker_for_figi(figi) or figi
+            last = self.get_last_price(figi)
+            entry = fs.entry_price
+
+            if entry is None or last is None:
+                lines.append(f"- {ticker}: lots={lots}, entry=N/A, last={last if last is not None else 'N/A'}")
+                continue
+
+            lot_size = self._lot_size(figi)
+            pnl_abs = (float(last) - float(entry)) * float(lot_size) * float(lots)
+            pnl_pct = (float(last) / float(entry) - 1.0) * 100.0
+            lines.append(
+                f"- {ticker}: lots={lots}, entry={float(entry):.4f}, last={float(last):.4f}, "
+                f"PnL={pnl_abs:+.2f} RUB ({pnl_pct:+.2f}%)"
+            )
+
+        if not any_pos:
+            lines.append("- no positions")
+
+        return "\n".join(lines)
 
     # ---------- converters ----------
     @staticmethod
@@ -538,7 +706,7 @@ class Broker:
         try:
             self._call(self._order_cancel_call(), account_id=account_id, order_id=oid)
             self.log(f"[CANCEL] {self.format_instrument(figi)} order_id={oid}")
-            self.notify(f"[CANCEL] {self._ticker_for_figi(figi) or figi} order_id={oid}", throttle_sec=0)
+            self.notify_event("cancel", f"[CANCEL] {self._ticker_for_figi(figi) or figi} order_id={oid}", throttle_sec=0)
 
             self.journal_event(
                 "CANCEL",
@@ -562,7 +730,11 @@ class Broker:
                 return True
             else:
                 self.log(f"[WARN] cancel_order failed: {e}")
-                self.notify(f"[WARN] cancel failed: {self._ticker_for_figi(figi) or figi} | {e}", throttle_sec=120)
+                self.notify_event(
+                    "warning",
+                    f"[WARN] cancel failed: {self._ticker_for_figi(figi) or figi} | {e}",
+                    throttle_sec=120,
+                )
                 return False
 
     def place_limit_buy(self, account_id: str, figi: str, price: float, quantity_lots: int = 1) -> bool:
@@ -591,7 +763,7 @@ class Broker:
                     f"(cash={cash:.2f} reserved≈{self._reserved_rub_total():.2f} free≈{free_cash:.2f} need≈{est_cost:.2f})"
                 )
                 self.log(msg)
-                self.notify(msg, throttle_sec=0)
+                self.notify_event("warning", msg, throttle_sec=0)
 
             self.journal_event(
                 "SKIP",
@@ -636,8 +808,16 @@ class Broker:
                 f"[ORDER] BUY {inst} qty={int(quantity_lots)} price={price_f} "
                 f"| cash≈{cash2:.2f} free≈{free2:.2f} {self.currency.upper()} (client_uid={client_uid})"
             )
-            self.notify(
-                f"[ORDER] BUY {inst} qty={int(quantity_lots)} price={price_f} | free≈{free2:.2f} {self.currency.upper()}",
+            self.notify_event(
+                "order",
+                self.format_order_notification(
+                    side="BUY",
+                    figi=figi,
+                    qty=int(quantity_lots),
+                    price=float(price_f),
+                    cash=float(cash2),
+                    free=float(free2),
+                ),
                 throttle_sec=0,
             )
 
@@ -657,7 +837,11 @@ class Broker:
             return True
         except Exception as e:
             self.log(f"[WARN] post_order BUY failed: {e}")
-            self.notify(f"[WARN] BUY submit failed: {self._ticker_for_figi(figi) or figi} | {e}", throttle_sec=120)
+            self.notify_event(
+                "warning",
+                f"[WARN] BUY submit failed: {self._ticker_for_figi(figi) or figi} | {e}",
+                throttle_sec=120,
+            )
             self.state.clear_order(figi)
             self._reserved_rub_by_figi.pop(figi, None)
             return False
@@ -703,8 +887,16 @@ class Broker:
                 f"[ORDER] SELL {inst} qty={int(fs.position_lots)} price={price_f} "
                 f"| cash≈{cash:.2f} free≈{free:.2f} {self.currency.upper()} (client_uid={client_uid})"
             )
-            self.notify(
-                f"[ORDER] SELL {inst} qty={int(fs.position_lots)} price={price_f} | cash≈{cash:.2f} {self.currency.upper()}",
+            self.notify_event(
+                "order",
+                self.format_order_notification(
+                    side="SELL",
+                    figi=figi,
+                    qty=int(fs.position_lots),
+                    price=float(price_f),
+                    cash=float(cash),
+                    free=float(free),
+                ),
                 throttle_sec=0,
             )
 
@@ -723,7 +915,11 @@ class Broker:
             return True
         except Exception as e:
             self.log(f"[WARN] post_order SELL failed: {e}")
-            self.notify(f"[WARN] SELL submit failed: {self._ticker_for_figi(figi) or figi} | {e}", throttle_sec=120)
+            self.notify_event(
+                "warning",
+                f"[WARN] SELL submit failed: {self._ticker_for_figi(figi) or figi} | {e}",
+                throttle_sec=120,
+            )
             self.state.clear_order(figi)
             return False
 
@@ -739,7 +935,7 @@ class Broker:
 
         inst = self.format_instrument(figi)
         self.log(f"[EXPIRE] {inst} order_id={fs.active_order_id} age={age:.0f}s ttl={ttl_sec}s -> cancelling")
-        self.notify(f"[EXPIRE] {inst} age={age:.0f}s -> cancel", throttle_sec=0)
+        self.notify_event("expire", f"[EXPIRE] {inst} age={age:.0f}s -> cancel", throttle_sec=0)
 
         self.journal_event(
             "EXPIRE",
@@ -826,8 +1022,9 @@ class Broker:
                 if side == "BUY":
                     self.state.trades_today += 1
 
-                self.notify(
-                    f"[FILL] {side} {self._ticker_for_figi(figi) or figi} lots={lots_executed} price={avg_price}",
+                self.notify_event(
+                    "fill",
+                    self.format_fill_notification(side=side, figi=figi, lots_executed=lots_executed, avg_price=avg_price),
                     throttle_sec=0,
                 )
 
@@ -846,9 +1043,15 @@ class Broker:
                             pnl_abs = (float(avg_price) - float(entry)) * float(lot_size) * qty_lots
                             pnl_pct = (float(avg_price) / float(entry) - 1.0) * 100.0
                             self.state.day_realized_pnl_rub += float(pnl_abs)
-                            self.notify(
-                                f"[PNL] {self._ticker_for_figi(figi) or figi} "
-                                f"{pnl_abs:+.2f} RUB ({pnl_pct:+.2f}%) | entry={float(entry):.4f} exit={float(avg_price):.4f}",
+                            self.notify_event(
+                                "pnl",
+                                self.format_pnl_notification(
+                                    figi=figi,
+                                    pnl_abs=float(pnl_abs),
+                                    pnl_pct=float(pnl_pct),
+                                    entry=float(entry),
+                                    exit_=float(avg_price),
+                                ),
                                 throttle_sec=0,
                             )
                     except Exception:
@@ -869,7 +1072,7 @@ class Broker:
                     status=status,
                     reason="cancelled_by_api",
                 )
-                self.notify(f"[CANCELLED] {self._ticker_for_figi(figi) or figi}", throttle_sec=0)
+                self.notify_event("cancel", f"[CANCELLED] {self._ticker_for_figi(figi) or figi}", throttle_sec=0)
 
             elif status == "EXECUTION_REPORT_STATUS_REJECTED":
                 self.journal_event(
@@ -883,7 +1086,11 @@ class Broker:
                     status=status,
                     reason="rejected",
                 )
-                self.notify(f"[REJECT] {self._ticker_for_figi(figi) or figi} | status={status}", throttle_sec=60)
+                self.notify_event(
+                    "reject",
+                    f"[REJECT] {self._ticker_for_figi(figi) or figi} | status={status}",
+                    throttle_sec=60,
+                )
 
             self.state.clear_order(figi)
             self._reserved_rub_by_figi.pop(figi, None)

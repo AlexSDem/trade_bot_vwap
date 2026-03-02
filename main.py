@@ -2,6 +2,7 @@ import os
 import time
 import yaml
 from datetime import datetime, timezone
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from tinkoff.invest import Client
@@ -31,6 +32,16 @@ def get_token() -> str:
     return token
 
 
+def save_daily_report(report_text: str, report_day_utc, cfg: dict) -> str:
+    reports_dir = cfg.get("runtime", {}).get("reports_dir", "logs/reports")
+    os.makedirs(reports_dir, exist_ok=True)
+    out_path = Path(reports_dir) / f"{report_day_utc.isoformat()}.txt"
+    generated_at = datetime.now(timezone.utc).isoformat()
+    payload = f"Generated at (UTC): {generated_at}\n\n{report_text}\n"
+    out_path.write_text(payload, encoding="utf-8")
+    return str(out_path)
+
+
 def main():
     cfg = load_config()
     token = get_token()
@@ -49,13 +60,23 @@ def main():
     order_ttl_sec = int(cfg.get("runtime", {}).get("order_ttl_sec", 120))  # 2 minutes default
 
     with Client(token) as client:
-        broker = Broker(client, cfg["broker"], notifier=notifier)
+        broker = Broker(client, cfg["broker"], notifier=notifier, notify_cfg=cfg.get("telegram", {}))
 
         account_id = broker.pick_account_id()
         broker.log(f"[INFO] Account: {account_id} (sandbox={cfg['broker'].get('use_sandbox', True)})")
 
-        notifier.send(
-            f"trade_bot started\naccount={account_id}\nsandbox={cfg['broker'].get('use_sandbox', True)}",
+        broker.notify_event(
+            "startup",
+            (
+                "Trade bot started\n"
+                f"Account: {account_id}\n"
+                f"Sandbox: {cfg['broker'].get('use_sandbox', True)}\n"
+                f"Timezone: {cfg['schedule']['tz']}\n"
+                f"Session: {cfg['schedule']['start_trade']} - {cfg['schedule']['flatten_time']}\n"
+                f"Max lot cost: {cfg['risk']['max_lot_cost_rub']} RUB\n"
+                f"Max day loss: {cfg['risk']['max_day_loss_rub']} RUB\n"
+                f"Max trades/day: {cfg['risk']['max_trades_per_day']}"
+            ),
             throttle_sec=0,
         )
 
@@ -75,7 +96,11 @@ def main():
         try:
             txt = broker.build_portfolio_status(account_id, figis, title="Portfolio snapshot (start)")
             broker.log(txt)
-            notifier.send(txt, throttle_sec=0)
+            broker.notify_event(
+                "portfolio",
+                broker.build_portfolio_status_telegram(account_id, figis, title="Portfolio snapshot (start)"),
+                throttle_sec=0,
+            )
         except Exception as e:
             broker.log(f"[WARN] Portfolio snapshot failed (start): {e}")
 
@@ -100,7 +125,11 @@ def main():
                     try:
                         txt = broker.build_portfolio_status(account_id, figis, title="Portfolio snapshot")
                         broker.log(txt)
-                        notifier.send(txt, throttle_sec=0)
+                        broker.notify_event(
+                            "portfolio",
+                            broker.build_portfolio_status_telegram(account_id, figis, title="Portfolio snapshot"),
+                            throttle_sec=0,
+                        )
                     except Exception as e:
                         broker.log(f"[WARN] Portfolio snapshot failed: {e}")
                     last_portfolio_push = time.time()
@@ -115,14 +144,27 @@ def main():
                         if report_sent_for_day != day_key:
                             try:
                                 df = load_trades(cfg["broker"].get("trades_csv", "logs/trades.csv"))
-                                report = build_report(df, datetime.now(timezone.utc).date())
+                                report_day = datetime.now(timezone.utc).date()
+                                report = build_report(df, report_day)
+                                report_path = save_daily_report(report, report_day, cfg)
                                 broker.log(report)
-                                notifier.send(report, throttle_sec=0)
+                                broker.log(f"[INFO] Daily report saved: {report_path}")
+                                broker.notify_event(
+                                    "daily_report",
+                                    f"Daily report\nFile: {report_path}\n\n{report}",
+                                    throttle_sec=0,
+                                )
 
                                 try:
                                     txt = broker.build_portfolio_status(account_id, figis, title="Portfolio snapshot (end)")
                                     broker.log(txt)
-                                    notifier.send(txt, throttle_sec=0)
+                                    broker.notify_event(
+                                        "portfolio",
+                                        broker.build_portfolio_status_telegram(
+                                            account_id, figis, title="Portfolio snapshot (end)"
+                                        ),
+                                        throttle_sec=0,
+                                    )
                                 except Exception as e:
                                     broker.log(f"[WARN] Portfolio snapshot failed (end): {e}")
 
@@ -141,14 +183,25 @@ def main():
                     if report_sent_for_day != day_key:
                         try:
                             df = load_trades(cfg["broker"].get("trades_csv", "logs/trades.csv"))
-                            report = build_report(df, datetime.now(timezone.utc).date())
+                            report_day = datetime.now(timezone.utc).date()
+                            report = build_report(df, report_day)
+                            report_path = save_daily_report(report, report_day, cfg)
                             broker.log(report)
-                            notifier.send(report, throttle_sec=0)
+                            broker.log(f"[INFO] Daily report saved: {report_path}")
+                            broker.notify_event(
+                                "daily_report",
+                                f"Daily report\nFile: {report_path}\n\n{report}",
+                                throttle_sec=0,
+                            )
 
                             try:
                                 txt = broker.build_portfolio_status(account_id, figis, title="Portfolio snapshot (end)")
                                 broker.log(txt)
-                                notifier.send(txt, throttle_sec=0)
+                                broker.notify_event(
+                                    "portfolio",
+                                    broker.build_portfolio_status_telegram(account_id, figis, title="Portfolio snapshot (end)"),
+                                    throttle_sec=0,
+                                )
                             except Exception as e:
                                 broker.log(f"[WARN] Portfolio snapshot failed (end): {e}")
 
@@ -191,6 +244,10 @@ def main():
                         limit_price = signal.get("limit_price", price)
                         reason = signal.get("reason", "")
                         inst = broker.format_instrument(figi)
+                        if price is None:
+                            continue
+                        if limit_price is None:
+                            limit_price = price
 
                         cash = broker.get_cached_cash_rub(account_id)
                         try:
@@ -201,6 +258,19 @@ def main():
                         broker.log(
                             f"[SIGNAL] {action} {inst} last={price} limit={float(limit_price):.4f} "
                             f"| cash≈{cash:.2f} free≈{free:.2f} RUB | {reason}"
+                        )
+                        broker.notify_event(
+                            "signal",
+                            broker.format_signal_notification(
+                                action=action,
+                                figi=figi,
+                                last=float(price),
+                                limit_price=float(limit_price),
+                                cash=float(cash),
+                                free=float(free),
+                                reason=str(reason),
+                            ),
+                            throttle_sec=0,
                         )
 
                         broker.journal_event(
@@ -233,7 +303,7 @@ def main():
 
             except KeyboardInterrupt:
                 broker.log("[INFO] Stopped by user (Ctrl+C). Trying to flatten...")
-                notifier.send("trade_bot stopped by user (Ctrl+C). Flattening...", throttle_sec=0)
+                broker.notify_event("service", "trade_bot stopped by user (Ctrl+C). Flattening...", throttle_sec=0)
                 try:
                     broker.flatten_if_needed(account_id, cfg["schedule"])
                 except Exception as e:
@@ -247,11 +317,11 @@ def main():
                     print("Main loop error:", e)
 
                 consecutive_errors += 1
-                notifier.send(f"[ERROR] Main loop error: {e}", throttle_sec=120)
+                broker.notify_event("error", f"[ERROR] Main loop error: {e}", throttle_sec=120)
 
                 if consecutive_errors >= int(cfg.get("runtime", {}).get("max_consecutive_errors", 8)):
                     broker.log("[ERROR] Too many consecutive errors. Stopping bot.")
-                    notifier.send("[FATAL] Too many consecutive errors. Stopping bot.", throttle_sec=0)
+                    broker.notify_event("error", "[FATAL] Too many consecutive errors. Stopping bot.", throttle_sec=0)
                     break
                 time.sleep(error_sleep_sec)
 
