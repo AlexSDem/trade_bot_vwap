@@ -5,7 +5,7 @@ broker:
   log_file: "logs/bot.log"
   key_log_file: "logs/key_events.log"
   class_code: "TQBR"
-  buy_aggressive_ticks: 1   # лимит близко к last (1 тик)
+  buy_aggressive_ticks: 1
   sell_aggressive_ticks: 1
   trades_csv: "logs/trades.csv"
 
@@ -26,36 +26,27 @@ schedule:
 
 strategy:
   lookback_minutes: 180
-  k_atr: 1.2
-  take_profit_pct: 0.004
-  stop_loss_pct: 0.006
-  time_stop_minutes: 45
+  k_atr: 1.35
+  take_profit_pct: 0.0055
+  stop_loss_pct: 0.0055
+  time_stop_minutes: 35
 
-  # entry filters (как было в улучшенной версии)
-  min_edge_atr: 0.05
-  max_rebound_atr: 0.25
+  min_edge_atr: 0.08
+  max_rebound_atr: 0.20
 
-  # Variant A: time-stop changes behavior (no forced SELL by time)
-  time_stop_tighten_stop_loss_pct: 0.0025   # после 45 минут стоп подтягиваем до -0.25% от entry
-  breakeven_pct: 0.0005                     # безопасный выход на +0.05% от entry (примерно)
-  enable_time_stop_safe_exit: true          # разрешить закрытие, когда вернулись к VWAP/безубытку
+  time_stop_tighten_stop_loss_pct: 0.0025
+  breakeven_pct: 0.0005
+  enable_time_stop_safe_exit: true
 
 risk:
   max_lot_cost_rub: 3500
   max_day_loss_rub: 1000
-  max_trades_per_day: 3
+  max_trades_per_day: 20
 
-  # Main portfolio constraint
   max_positions: 5
-
-  # Per-figi constraint (legacy)
   max_active_orders_per_figi: 1
-
-  # NEW: portfolio-level constraints for pending orders
-  # Conservative default: same as max_positions
   max_pending_buys_total: 5
   max_active_orders_total: 5
-
 
 runtime:
   sleep_sec: 55
@@ -64,10 +55,7 @@ runtime:
   error_sleep_sec: 10
   max_consecutive_errors: 8
   reports_dir: "logs/reports"
-
-  # NEW: cancel/expire limit orders if not filled within TTL
-  # (prevents "stuck all day" and frees slots for new signals)
-  order_ttl_sec: 120
+  order_ttl_sec: 90
 
 telegram:
   enabled: true
