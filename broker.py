@@ -1,10 +1,13 @@
 import os
+import csv
+import json
 import uuid
 import math
 import time
 import logging
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from zoneinfo import ZoneInfo
 from decimal import Decimal
 from typing import List, Optional, Dict, Any
@@ -59,15 +62,24 @@ class Broker:
         "[INFO] Account:",
     )
 
-    def __init__(self, client: Client, cfg: dict, notifier=None, notify_cfg: Optional[dict] = None):
+    def __init__(
+        self,
+        client: Client,
+        cfg: dict,
+        notifier=None,
+        notify_cfg: Optional[dict] = None,
+        trading_tz: str = "Europe/Moscow",
+    ):
         self.client = client
         self.cfg = cfg
         self.state = BotState()
         self.notifier = notifier
         self.notify_cfg = notify_cfg or {}
+        self.trading_tz = trading_tz
 
         self._last_low_cash_warn: Dict[str, float] = {}
         self._reserved_rub_by_figi: Dict[str, float] = {}
+        self._journaled_fill_order_ids: set[str] = set()
 
         os.makedirs("logs", exist_ok=True)
 
@@ -99,8 +111,11 @@ class Broker:
 
         self._figi_info: Dict[str, InstrumentInfo] = {}
         self.last_cash_rub: float = 0.0
+        self.account_id: Optional[str] = None
+        self.state_file = cfg.get("state_file", "logs/runtime_state.json")
 
         self.journal = TradeJournal(cfg.get("trades_csv", "logs/trades.csv"))
+        self._bootstrap_journal_index()
 
     # ---------- logging ----------
     @staticmethod
@@ -418,10 +433,57 @@ class Broker:
 
     def journal_event(self, event: str, figi: str, **kwargs):
         self.journal.write(event=event, figi=figi, ticker=self._ticker_for_figi(figi), **kwargs)
+        if event == "FILL":
+            oid = str(kwargs.get("order_id", "") or "").strip()
+            if oid:
+                self._journaled_fill_order_ids.add(oid)
+
+    def _bootstrap_journal_index(self):
+        path = Path(self.journal.path)
+        if not path.exists():
+            return
+        try:
+            with path.open("r", encoding="utf-8", newline="") as f:
+                for row in csv.DictReader(f):
+                    if str(row.get("event", "")).upper() != "FILL":
+                        continue
+                    oid = str(row.get("order_id", "") or "").strip()
+                    if oid:
+                        self._journaled_fill_order_ids.add(oid)
+        except Exception:
+            pass
+
+    def save_runtime_state(self):
+        payload = {
+            "saved_at_utc": datetime.now(timezone.utc).isoformat(),
+            "account_id": self.account_id,
+            "state": self.state.to_dict(),
+        }
+        p = Path(self.state_file)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        tmp = p.with_suffix(p.suffix + ".tmp")
+        tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp.replace(p)
+
+    def load_runtime_state(self, account_id: str):
+        p = Path(self.state_file)
+        if not p.exists():
+            return
+        try:
+            payload = json.loads(p.read_text(encoding="utf-8"))
+            saved_account = str(payload.get("account_id", "") or "")
+            if saved_account and saved_account != str(account_id):
+                self.log(f"[INFO] Skip state restore: account mismatch ({saved_account} != {account_id})")
+                return
+            state_payload = payload.get("state", {}) or {}
+            self.state.load_dict(state_payload)
+            self.log(f"[INFO] Runtime state restored: {self.state_file}")
+        except Exception as e:
+            self.log(f"[WARN] Runtime state restore failed: {e}")
 
     # ---------- day helpers ----------
     def _today_key(self) -> str:
-        return datetime.now(tz=ZoneInfo("UTC")).date().isoformat()
+        return datetime.now(tz=ZoneInfo(self.trading_tz)).date().isoformat()
 
     def _ensure_day_rollover(self):
         today = self._today_key()
@@ -487,6 +549,8 @@ class Broker:
 
     # ---------- accounts / sandbox ----------
     def pick_account_id(self) -> str:
+        configured_account_id = str(self.cfg.get("account_id", "") or "").strip()
+
         if self.use_sandbox:
             accs = self._call(self.client.sandbox.get_sandbox_accounts).accounts
             if not accs:
@@ -507,13 +571,37 @@ class Broker:
                     except Exception as e:
                         self.log(f"[WARN] Sandbox pay-in failed: {e}")
 
+                self.account_id = account_id
                 return account_id
+
+            acc_ids = [str(a.id) for a in accs]
+            if configured_account_id:
+                if configured_account_id not in acc_ids:
+                    raise RuntimeError(
+                        f"Configured sandbox account_id={configured_account_id} not found. Available: {acc_ids}"
+                    )
+                self.account_id = configured_account_id
+                return configured_account_id
+
+            self.account_id = accs[0].id
             return accs[0].id
 
         resp = self._call(self.client.users.get_accounts)
         if not resp.accounts:
             raise RuntimeError("Нет доступных счетов")
-        return resp.accounts[0].id
+        acc_ids = [str(a.id) for a in resp.accounts]
+        if configured_account_id:
+            if configured_account_id not in acc_ids:
+                raise RuntimeError(
+                    f"Configured real account_id={configured_account_id} not found. Available: {acc_ids}"
+                )
+            self.account_id = configured_account_id
+            return configured_account_id
+
+        raise RuntimeError(
+            "Для реального режима нужно явно задать broker.account_id в config.yaml. "
+            f"Available accounts: {acc_ids}"
+        )
 
     @staticmethod
     def _money_value(amount: float, currency: str):
@@ -606,15 +694,17 @@ class Broker:
         # Orders
         try:
             orders = self._call(self._orders_list_call(), account_id=account_id).orders
-            active_by_figi: Dict[str, Dict[str, str]] = {}
+            active_by_figi: Dict[str, Dict[str, Any]] = {}
             for o in orders:
                 f = getattr(o, "figi", "")
                 if f in figi_set and f not in active_by_figi:
                     direction = str(getattr(o, "direction", ""))
                     side = "BUY" if "BUY" in direction else ("SELL" if "SELL" in direction else "")
+                    order_date = getattr(o, "order_date", None)
                     active_by_figi[f] = {
                         "order_id": getattr(o, "order_id", ""),
                         "side": side,
+                        "order_date": order_date,
                     }
 
             for f in figi_set:
@@ -624,6 +714,12 @@ class Broker:
                     fs.active_order_id = api_order.get("order_id") or fs.active_order_id
                     if not fs.order_side and api_order.get("side"):
                         fs.order_side = api_order.get("side")
+                    if fs.order_placed_ts is None:
+                        od = api_order.get("order_date")
+                        if isinstance(od, datetime):
+                            fs.order_placed_ts = od
+                            if not fs.active_order_reason:
+                                fs.active_order_reason = "restored_from_api"
                 elif fs.active_order_id is None:
                     self._reserved_rub_by_figi.pop(f, None)
         except Exception as e:
@@ -1211,6 +1307,67 @@ class Broker:
 
             self.state.clear_order(figi)
             self._reserved_rub_by_figi.pop(figi, None)
+
+    def reconcile_recent_fills(self, account_id: str, figis: List[str], lookback_minutes: int = 180) -> int:
+        """
+        Best-effort reconciliation through operations API:
+        if execution happened but per-order polling missed final status,
+        backfill FILL events into journal.
+        """
+        from_ = now() - timedelta(minutes=int(max(5, lookback_minutes)))
+        to_ = now()
+        reconciled = 0
+        figi_set = set(figis)
+
+        try:
+            resp = self._call(self._operations_call(), account_id=account_id, from_=from_, to=to_)
+            operations = getattr(resp, "operations", []) or []
+        except Exception as e:
+            self.log(f"[WARN] reconcile_recent_fills failed (operations call): {e}")
+            return 0
+
+        for op in operations:
+            figi = str(getattr(op, "figi", "") or "")
+            if figi not in figi_set:
+                continue
+
+            op_type = str(getattr(op, "operation_type", "") or "").upper()
+            if ("BUY" not in op_type) and ("SELL" not in op_type):
+                continue
+            side = "BUY" if "BUY" in op_type else "SELL"
+
+            qty_raw = getattr(op, "quantity", 0)
+            qty = int(abs(self._to_float(qty_raw)))
+            if qty <= 0:
+                continue
+
+            order_id = str(getattr(op, "parent_operation_id", "") or "")
+            if not order_id:
+                order_id = str(getattr(op, "id", "") or "")
+            if not order_id:
+                continue
+
+            if order_id in self._journaled_fill_order_ids:
+                continue
+
+            price_obj = getattr(op, "price", None)
+            px = float(self._to_float(price_obj)) if price_obj is not None else None
+            self.journal_event(
+                "FILL",
+                figi,
+                side=side,
+                lots=qty,
+                price=px,
+                order_id=order_id,
+                client_uid="",
+                status="RECONCILED",
+                reason="reconciled_from_operations_api",
+                meta={"op_type": op_type, "source": "operations_api"},
+            )
+            self.log(f"[RECONCILE] FILL restored {self.format_instrument(figi)} side={side} lots={qty} order_id={order_id}")
+            reconciled += 1
+
+        return reconciled
 
     # ---------- flatten ----------
     def flatten_if_needed(self, account_id: str, schedule_cfg: dict):

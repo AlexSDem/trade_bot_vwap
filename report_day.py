@@ -1,6 +1,7 @@
 import argparse
 from datetime import datetime, date, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 import pandas as pd
 
 
@@ -41,20 +42,23 @@ def load_trades(csv_path: str) -> pd.DataFrame:
     return df
 
 
-def build_report(df: pd.DataFrame, day: date) -> str:
+def build_report(df: pd.DataFrame, day: date, tz_name: str = "UTC") -> str:
     if df.empty:
         return f"No data in trades.csv\n"
 
-    # filter by UTC date of ts_utc
-    day_start = datetime(day.year, day.month, day.day, tzinfo=timezone.utc)
-    day_end = day_start.replace(hour=23, minute=59, second=59)
+    # filter by local day in selected timezone
+    tz = ZoneInfo(tz_name)
+    day_start_local = datetime(day.year, day.month, day.day, 0, 0, 0, tzinfo=tz)
+    day_end_local = datetime(day.year, day.month, day.day, 23, 59, 59, tzinfo=tz)
+    day_start = day_start_local.astimezone(timezone.utc)
+    day_end = day_end_local.astimezone(timezone.utc)
 
     ddf = df[(df["ts_utc"] >= day_start) & (df["ts_utc"] <= day_end)].copy()
     if ddf.empty:
-        return f"No events for {day.isoformat()} (UTC)\n"
+        return f"No events for {day.isoformat()} ({tz_name})\n"
 
     lines = []
-    lines.append(f"Daily report for {day.isoformat()} (UTC)")
+    lines.append(f"Daily report for {day.isoformat()} ({tz_name})")
     lines.append("-" * 60)
     lines.append(f"Events total: {len(ddf)}")
     lines.append("")
@@ -190,7 +194,7 @@ def main():
     args = parse_args()
     day = to_date(args.date)
     df = load_trades(args.csv)
-    report = build_report(df, day)
+    report = build_report(df, day, tz_name=args.tz)
 
     if args.out:
         Path(args.out).write_text(report, encoding="utf-8")

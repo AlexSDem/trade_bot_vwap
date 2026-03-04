@@ -32,10 +32,10 @@ def get_token() -> str:
     return token
 
 
-def save_daily_report(report_text: str, report_day_utc, cfg: dict) -> str:
+def save_daily_report(report_text: str, report_day_local, cfg: dict) -> str:
     reports_dir = cfg.get("runtime", {}).get("reports_dir", "logs/reports")
     os.makedirs(reports_dir, exist_ok=True)
-    out_path = Path(reports_dir) / f"{report_day_utc.isoformat()}.txt"
+    out_path = Path(reports_dir) / f"{report_day_local.isoformat()}.txt"
     generated_at = datetime.now(timezone.utc).isoformat()
     payload = f"Generated at (UTC): {generated_at}\n\n{report_text}\n"
     out_path.write_text(payload, encoding="utf-8")
@@ -58,12 +58,19 @@ def main():
     midday_report_time = cfg.get("runtime", {}).get("midday_report_time", "15:00")
     schedule_tz = ZoneInfo(cfg["schedule"]["tz"])
     midday_report_hhmm = None
+    reconcile_sec = float(cfg.get("runtime", {}).get("reconcile_sec", 600))
 
     # NEW: order TTL seconds (cancel if not filled)
     order_ttl_sec = int(cfg.get("runtime", {}).get("order_ttl_sec", 120))  # 2 minutes default
 
     with Client(token) as client:
-        broker = Broker(client, cfg["broker"], notifier=notifier, notify_cfg=cfg.get("telegram", {}))
+        broker = Broker(
+            client,
+            cfg["broker"],
+            notifier=notifier,
+            notify_cfg=cfg.get("telegram", {}),
+            trading_tz=cfg["schedule"]["tz"],
+        )
         midday_report_hhmm = broker._parse_hhmm(str(midday_report_time))
 
         account_id = broker.pick_account_id()
@@ -96,6 +103,10 @@ def main():
             broker.log("[ERROR] Нет подходящих инструментов под max_lot_cost_rub. Увеличь лимит или измени tickers.")
             return
 
+        broker.load_runtime_state(account_id)
+        broker.refresh_account_snapshot(account_id, figis)
+        broker.save_runtime_state()
+
         # portfolio snapshot on start
         try:
             txt = broker.build_portfolio_status(account_id, figis, title="Portfolio snapshot (start)")
@@ -110,6 +121,7 @@ def main():
 
         last_hb = 0.0
         last_portfolio_push = 0.0
+        last_reconcile = 0.0
         consecutive_errors = 0
         report_sent_for_day: str | None = None
         midday_report_sent_for_day: str | None = None
@@ -151,18 +163,28 @@ def main():
                         broker.log(f"[WARN] Portfolio snapshot failed: {e}")
                     last_portfolio_push = time.time()
 
+                # Periodic reconciliation with operations API
+                if time.time() - last_reconcile >= reconcile_sec:
+                    try:
+                        restored = broker.reconcile_recent_fills(account_id, figis, lookback_minutes=180)
+                        if restored > 0:
+                            broker.log(f"[INFO] Reconcile restored fills: {restored}")
+                    except Exception as e:
+                        broker.log(f"[WARN] Reconcile failed: {e}")
+                    last_reconcile = time.time()
+
                 # Outside trading window
                 if not broker.is_trading_time(ts, cfg["schedule"]):
                     broker.flatten_if_needed(account_id, cfg["schedule"])
 
                     # End of day report + end portfolio
                     if broker.flatten_due(ts, cfg["schedule"]):
-                        day_key = datetime.now(timezone.utc).date().isoformat()
+                        day_key = ts_local.date().isoformat()
                         if report_sent_for_day != day_key:
                             try:
                                 df = load_trades(cfg["broker"].get("trades_csv", "logs/trades.csv"))
-                                report_day = datetime.now(timezone.utc).date()
-                                report = build_report(df, report_day)
+                                report_day = ts_local.date()
+                                report = build_report(df, report_day, tz_name=cfg["schedule"]["tz"])
                                 report_path = save_daily_report(report, report_day, cfg)
                                 broker.log(report)
                                 broker.log(f"[INFO] Daily report saved: {report_path}")
@@ -196,12 +218,12 @@ def main():
                 if broker.flatten_due(ts, cfg["schedule"]):
                     broker.flatten_if_needed(account_id, cfg["schedule"])
 
-                    day_key = datetime.now(timezone.utc).date().isoformat()
+                    day_key = ts_local.date().isoformat()
                     if report_sent_for_day != day_key:
                         try:
                             df = load_trades(cfg["broker"].get("trades_csv", "logs/trades.csv"))
-                            report_day = datetime.now(timezone.utc).date()
-                            report = build_report(df, report_day)
+                            report_day = ts_local.date()
+                            report = build_report(df, report_day, tz_name=cfg["schedule"]["tz"])
                             report_path = save_daily_report(report, report_day, cfg)
                             broker.log(report)
                             broker.log(f"[INFO] Daily report saved: {report_path}")
@@ -324,6 +346,7 @@ def main():
                 # day protector
                 day_metric = broker.calc_day_risk_metric(figis)
                 risk.update_day_pnl(day_metric)
+                broker.save_runtime_state()
 
                 time.sleep(sleep_sec)
                 consecutive_errors = 0
@@ -333,6 +356,7 @@ def main():
                 broker.notify_event("service", "trade_bot stopped by user (Ctrl+C). Flattening...", throttle_sec=0)
                 try:
                     broker.flatten_if_needed(account_id, cfg["schedule"])
+                    broker.save_runtime_state()
                 except Exception as e:
                     broker.log(f"[WARN] Flatten on exit failed: {e}")
                 break
@@ -342,6 +366,10 @@ def main():
                     broker.log(f"[ERROR] Main loop error: {e}")
                 except Exception:
                     print("Main loop error:", e)
+                try:
+                    broker.save_runtime_state()
+                except Exception:
+                    pass
 
                 consecutive_errors += 1
                 broker.notify_event("error", f"[ERROR] Main loop error: {e}", throttle_sec=120)
@@ -349,6 +377,7 @@ def main():
                 if consecutive_errors >= int(cfg.get("runtime", {}).get("max_consecutive_errors", 8)):
                     broker.log("[ERROR] Too many consecutive errors. Stopping bot.")
                     broker.notify_event("error", "[FATAL] Too many consecutive errors. Stopping bot.", throttle_sec=0)
+                    broker.save_runtime_state()
                     break
                 time.sleep(error_sleep_sec)
 

@@ -1,9 +1,11 @@
 broker:
   use_sandbox: true
+  account_id: ""  # required for real mode; optional for sandbox
   currency: "rub"
   min_sandbox_cash_rub: 12000
   log_file: "logs/bot.log"
   key_log_file: "logs/key_events.log"
+  state_file: "logs/runtime_state.json"
   class_code: "TQBR"
   buy_aggressive_ticks: 1
   sell_aggressive_ticks: 1
@@ -53,6 +55,7 @@ runtime:
   heartbeat_sec: 300
   portfolio_sec: 1800
   midday_report_time: "15:00"
+  reconcile_sec: 600
   error_sleep_sec: 10
   max_consecutive_errors: 8
   reports_dir: "logs/reports"
