@@ -11,6 +11,7 @@ class FigiState:
     # NEW: чтобы понимать что за ордер висит и когда поставили (TTL)
     order_side: Optional[str] = None            # "BUY" / "SELL"
     order_placed_ts: Optional[datetime] = None  # when order was placed (UTC)
+    active_order_reason: Optional[str] = None   # signal/trigger text for current order
 
     # position_lots хранится в ЛОТАХ (не в штуках)
     position_lots: int = 0
@@ -55,6 +56,7 @@ class BotState:
         fs.client_order_uid = None
         fs.order_side = None
         fs.order_placed_ts = None
+        fs.active_order_reason = None
 
     def reset_day(self, day_key: str):
         self.current_day = day_key

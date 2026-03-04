@@ -52,6 +52,7 @@ runtime:
   sleep_sec: 55
   heartbeat_sec: 300
   portfolio_sec: 1800
+  midday_report_time: "15:00"
   error_sleep_sec: 10
   max_consecutive_errors: 8
   reports_dir: "logs/reports"
@@ -62,7 +63,7 @@ telegram:
   compact_mode: true
   send_startup: true
   send_signals: false
-  send_orders: true
+  send_orders: false
   send_fills: true
   send_pnl: true
   send_portfolio_snapshots: false

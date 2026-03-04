@@ -73,6 +73,26 @@ def build_report(df: pd.DataFrame, day: date) -> str:
     )
     lines.append("")
 
+    # Order lifecycle summary (SUBMIT -> final)
+    with_oid = ddf[ddf["order_id"].fillna("").astype(str).str.strip() != ""].copy()
+    final_events = {"FILL", "PARTIAL_FILL", "CANCEL", "REJECT", "STATE_LOST", "EXPIRE"}
+    submit_orders = set(with_oid.loc[with_oid["event"] == "SUBMIT", "order_id"].astype(str))
+    final_orders = set(with_oid.loc[with_oid["event"].isin(final_events), "order_id"].astype(str))
+    closed_orders = submit_orders.intersection(final_orders)
+    stuck_orders = sorted(list(submit_orders - final_orders))
+    conversion_pct = (100.0 * len(closed_orders) / len(submit_orders)) if submit_orders else 0.0
+
+    lines.append("Order lifecycle:")
+    lines.append(
+        f"  submit_orders={len(submit_orders)} | finalized_orders={len(closed_orders)} "
+        f"| stuck_submit_without_final={len(stuck_orders)} | submit_to_final={conversion_pct:.1f}%"
+    )
+    if stuck_orders:
+        lines.append("  Stuck order_id (last 10):")
+        for oid in stuck_orders[-10:]:
+            lines.append(f"    - {oid}")
+    lines.append("")
+
     # Event counts
     lines.append("Events:")
     vc = ddf["event"].value_counts()
@@ -112,6 +132,24 @@ def build_report(df: pd.DataFrame, day: date) -> str:
     else:
         lines.append("No fills today.")
         lines.append("")
+
+    # Per ticker lifecycle
+    tdf = ddf.copy()
+    tdf["ticker_show"] = tdf["ticker"].where(tdf["ticker"].astype(str).str.strip() != "", tdf["figi"])
+    lines.append("By ticker (signal/submit/fill/cancel/reject/expire):")
+    grouped = tdf.groupby("ticker_show", dropna=False)
+    for ticker, g in grouped:
+        signals = int((g["event"] == "SIGNAL").sum())
+        submits = int((g["event"] == "SUBMIT").sum())
+        fills = int(g["event"].isin(["FILL", "PARTIAL_FILL"]).sum())
+        cancels = int((g["event"] == "CANCEL").sum())
+        rejects = int((g["event"] == "REJECT").sum())
+        expires = int((g["event"] == "EXPIRE").sum())
+        lines.append(
+            f"  {str(ticker):10s}: signal={signals:3d} submit={submits:3d} "
+            f"fill={fills:3d} cancel={cancels:3d} reject={rejects:3d} expire={expires:3d}"
+        )
+    lines.append("")
 
     # Rejections/cancels
     bad = ddf[ddf["event"].isin(["REJECT", "CANCEL"])].copy()

@@ -55,12 +55,16 @@ def main():
     error_sleep_sec = float(cfg.get("runtime", {}).get("error_sleep_sec", 10))
     heartbeat_sec = float(cfg.get("runtime", {}).get("heartbeat_sec", 300))
     portfolio_sec = float(cfg.get("runtime", {}).get("portfolio_sec", 1800))  # 30 min default
+    midday_report_time = cfg.get("runtime", {}).get("midday_report_time", "15:00")
+    schedule_tz = ZoneInfo(cfg["schedule"]["tz"])
+    midday_report_hhmm = None
 
     # NEW: order TTL seconds (cancel if not filled)
     order_ttl_sec = int(cfg.get("runtime", {}).get("order_ttl_sec", 120))  # 2 minutes default
 
     with Client(token) as client:
         broker = Broker(client, cfg["broker"], notifier=notifier, notify_cfg=cfg.get("telegram", {}))
+        midday_report_hhmm = broker._parse_hhmm(str(midday_report_time))
 
         account_id = broker.pick_account_id()
         broker.log(f"[INFO] Account: {account_id} (sandbox={cfg['broker'].get('use_sandbox', True)})")
@@ -108,12 +112,25 @@ def main():
         last_portfolio_push = 0.0
         consecutive_errors = 0
         report_sent_for_day: str | None = None
+        midday_report_sent_for_day: str | None = None
 
         while True:
             try:
                 ts = now()
-                day_key = ts.astimezone(ZoneInfo(cfg["schedule"]["tz"])).date().isoformat()
+                ts_local = ts.astimezone(schedule_tz)
+                day_key = ts_local.date().isoformat()
                 risk.touch_day(day_key)
+
+                # Midday report once per local day
+                if ts_local.time() >= midday_report_hhmm and midday_report_sent_for_day != day_key:
+                    try:
+                        title = f"Промежуточный отчет {ts_local.strftime('%Y-%m-%d %H:%M %Z')}"
+                        txt = broker.build_intraday_report_telegram(account_id, figis, title=title)
+                        broker.log(txt)
+                        broker.notify_event("daily_report", txt, throttle_sec=0)
+                    except Exception as e:
+                        broker.log(f"[WARN] Midday report failed: {e}")
+                    midday_report_sent_for_day = day_key
 
                 # Heartbeat
                 if time.time() - last_hb >= heartbeat_sec:
@@ -289,10 +306,20 @@ def main():
                             continue
                         if not risk.allow_new_trade(broker.state, account_id, figi):
                             continue
-                        broker.place_limit_buy(account_id, figi, signal.get("limit_price", signal["price"]))
+                        broker.place_limit_buy(
+                            account_id,
+                            figi,
+                            signal.get("limit_price", signal["price"]),
+                            reason=str(signal.get("reason", "") or ""),
+                        )
 
                     elif action == "SELL":
-                        broker.place_limit_sell_to_close(account_id, figi, signal.get("limit_price", signal["price"]))
+                        broker.place_limit_sell_to_close(
+                            account_id,
+                            figi,
+                            signal.get("limit_price", signal["price"]),
+                            reason=str(signal.get("reason", "") or ""),
+                        )
 
                 # day protector
                 day_metric = broker.calc_day_risk_metric(figis)

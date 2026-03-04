@@ -134,7 +134,7 @@ class Broker:
         defaults_compact = {
             "startup": True,
             "signal": False,
-            "order": True,
+            "order": False,
             "fill": True,
             "pnl": True,
             "portfolio": False,
@@ -211,6 +211,57 @@ class Broker:
         px = "N/A" if avg_price is None else f"{float(avg_price):.4f}"
         return f"Fill {side}\nTicker: {ticker}\nLots: {int(lots_executed)}\nPrice: {px}"
 
+    @staticmethod
+    def _emoji_for_pnl(value: float) -> str:
+        if float(value) > 0:
+            return "🟢"
+        if float(value) < 0:
+            return "🔴"
+        return "⚪"
+
+    def format_trade_fill_notification(
+        self,
+        side: str,
+        figi: str,
+        lots_executed: int,
+        avg_price: Optional[float],
+        reason: str = "",
+        pnl_abs: Optional[float] = None,
+        pnl_pct: Optional[float] = None,
+    ) -> str:
+        ticker = self._ticker_for_figi(figi) or figi
+        px = "N/A" if avg_price is None else f"{float(avg_price):.4f}"
+        reason_txt = reason or "n/a"
+        if side == "BUY":
+            return (
+                "🟢 BUY исполнен\n"
+                f"Тикер: {ticker}\n"
+                f"Лоты: {int(lots_executed)}\n"
+                f"Цена: {px}\n"
+                f"Причина: {reason_txt}"
+            )
+
+        if side == "SELL":
+            if pnl_abs is None or pnl_pct is None:
+                return (
+                    "⚪ SELL исполнен\n"
+                    f"Тикер: {ticker}\n"
+                    f"Лоты: {int(lots_executed)}\n"
+                    f"Цена: {px}\n"
+                    f"Причина: {reason_txt}"
+                )
+            emj = self._emoji_for_pnl(float(pnl_abs))
+            return (
+                f"{emj} SELL исполнен\n"
+                f"Тикер: {ticker}\n"
+                f"Лоты: {int(lots_executed)}\n"
+                f"Цена: {px}\n"
+                f"Результат: {float(pnl_abs):+.2f} RUB ({float(pnl_pct):+.2f}%)\n"
+                f"Причина: {reason_txt}"
+            )
+
+        return f"⚪ Сделка исполнена\nТикер: {ticker}\nЛоты: {int(lots_executed)}\nЦена: {px}\nПричина: {reason_txt}"
+
     def format_pnl_notification(self, figi: str, pnl_abs: float, pnl_pct: float, entry: float, exit_: float) -> str:
         ticker = self._ticker_for_figi(figi) or figi
         return (
@@ -262,6 +313,67 @@ class Broker:
         if not any_pos:
             lines.append("- no positions")
 
+        return "\n".join(lines)
+
+    def build_intraday_report_telegram(self, account_id: str, figis: List[str], title: str = "Промежуточный отчет") -> str:
+        self.refresh_account_snapshot(account_id, figis)
+
+        cash = float(self.get_cached_cash_rub(account_id))
+        reserved = float(self._reserved_rub_total())
+        free = float(max(0.0, cash - reserved))
+
+        total_market_value = 0.0
+        total_unrealized = 0.0
+        pos_lines: List[str] = []
+
+        for figi in figis:
+            fs = self.state.get(figi)
+            lots = int(fs.position_lots)
+            if lots <= 0:
+                continue
+
+            ticker = self._ticker_for_figi(figi) or figi
+            last = self.get_last_price(figi)
+            lot_size = self._lot_size(figi)
+
+            if last is None:
+                pos_lines.append(f"- {ticker}: lots={lots}, last=N/A, PnL=N/A")
+                continue
+
+            market_value = float(last) * float(lot_size) * float(lots)
+            total_market_value += market_value
+
+            entry = fs.entry_price
+            if entry is None:
+                pos_lines.append(f"- {ticker}: lots={lots}, last={float(last):.4f}, PnL=N/A (entry unknown)")
+                continue
+
+            pnl_abs = (float(last) - float(entry)) * float(lot_size) * float(lots)
+            pnl_pct = (float(last) / float(entry) - 1.0) * 100.0
+            total_unrealized += float(pnl_abs)
+            emj = self._emoji_for_pnl(float(pnl_abs))
+            pos_lines.append(
+                f"- {ticker}: lots={lots}, entry={float(entry):.4f}, last={float(last):.4f}, "
+                f"{emj} {pnl_abs:+.2f} RUB ({pnl_pct:+.2f}%)"
+            )
+
+        equity_estimate = float(cash + total_market_value)
+        realized = float(getattr(self.state, "day_realized_pnl_rub", 0.0) or 0.0)
+        day_total = float(realized + total_unrealized)
+        day_emoji = self._emoji_for_pnl(day_total)
+
+        lines: List[str] = [
+            title,
+            f"Баланс (оценка): {self._fmt_rub(equity_estimate)}",
+            f"Cash: {self._fmt_rub(cash)} | Free: {self._fmt_rub(free)} | Reserved: {self._fmt_rub(reserved)}",
+            f"Результат дня (realized+unrealized): {day_emoji} {day_total:+.2f} RUB",
+            f"Realized: {realized:+.2f} RUB | Unrealized: {total_unrealized:+.2f} RUB",
+            "Позиции:",
+        ]
+        if pos_lines:
+            lines.extend(pos_lines)
+        else:
+            lines.append("- нет открытых позиций")
         return "\n".join(lines)
 
     # ---------- converters ----------
@@ -494,17 +606,25 @@ class Broker:
         # Orders
         try:
             orders = self._call(self._orders_list_call(), account_id=account_id).orders
-            active_by_figi: Dict[str, str] = {}
+            active_by_figi: Dict[str, Dict[str, str]] = {}
             for o in orders:
                 f = getattr(o, "figi", "")
                 if f in figi_set and f not in active_by_figi:
-                    active_by_figi[f] = getattr(o, "order_id", "")
+                    direction = str(getattr(o, "direction", ""))
+                    side = "BUY" if "BUY" in direction else ("SELL" if "SELL" in direction else "")
+                    active_by_figi[f] = {
+                        "order_id": getattr(o, "order_id", ""),
+                        "side": side,
+                    }
 
             for f in figi_set:
                 fs = self.state.get(f)
-                fs.active_order_id = active_by_figi.get(f) or None
-                if fs.active_order_id is None:
-                    self.state.clear_order(f)
+                api_order = active_by_figi.get(f)
+                if api_order and api_order.get("order_id"):
+                    fs.active_order_id = api_order.get("order_id") or fs.active_order_id
+                    if not fs.order_side and api_order.get("side"):
+                        fs.order_side = api_order.get("side")
+                elif fs.active_order_id is None:
                     self._reserved_rub_by_figi.pop(f, None)
         except Exception as e:
             self.log(f"[WARN] get_orders failed: {e}")
@@ -737,7 +857,14 @@ class Broker:
                 )
                 return False
 
-    def place_limit_buy(self, account_id: str, figi: str, price: float, quantity_lots: int = 1) -> bool:
+    def place_limit_buy(
+        self,
+        account_id: str,
+        figi: str,
+        price: float,
+        quantity_lots: int = 1,
+        reason: str = "",
+    ) -> bool:
         fs = self.state.get(figi)
         if fs.active_order_id:
             return False
@@ -798,6 +925,7 @@ class Broker:
             fs.active_order_id = r.order_id
             fs.order_side = "BUY"
             fs.order_placed_ts = now()
+            fs.active_order_reason = str(reason or "")
 
             self._reserved_rub_by_figi[figi] = float(est_cost)
 
@@ -808,19 +936,6 @@ class Broker:
                 f"[ORDER] BUY {inst} qty={int(quantity_lots)} price={price_f} "
                 f"| cash≈{cash2:.2f} free≈{free2:.2f} {self.currency.upper()} (client_uid={client_uid})"
             )
-            self.notify_event(
-                "order",
-                self.format_order_notification(
-                    side="BUY",
-                    figi=figi,
-                    qty=int(quantity_lots),
-                    price=float(price_f),
-                    cash=float(cash2),
-                    free=float(free2),
-                ),
-                throttle_sec=0,
-            )
-
             self.journal_event(
                 "SUBMIT",
                 figi,
@@ -831,7 +946,7 @@ class Broker:
                 client_uid=client_uid,
                 status="NEW",
                 reason="limit_buy",
-                meta={"est_cost": est_cost},
+                meta={"est_cost": est_cost, "signal_reason": str(reason or "")},
             )
 
             return True
@@ -846,7 +961,7 @@ class Broker:
             self._reserved_rub_by_figi.pop(figi, None)
             return False
 
-    def place_limit_sell_to_close(self, account_id: str, figi: str, price: float) -> bool:
+    def place_limit_sell_to_close(self, account_id: str, figi: str, price: float, reason: str = "") -> bool:
         fs = self.state.get(figi)
         if int(fs.position_lots) <= 0:
             return False
@@ -877,6 +992,7 @@ class Broker:
             fs.active_order_id = r.order_id
             fs.order_side = "SELL"
             fs.order_placed_ts = now()
+            fs.active_order_reason = str(reason or "")
 
             self._reserved_rub_by_figi.pop(figi, None)
 
@@ -887,19 +1003,6 @@ class Broker:
                 f"[ORDER] SELL {inst} qty={int(fs.position_lots)} price={price_f} "
                 f"| cash≈{cash:.2f} free≈{free:.2f} {self.currency.upper()} (client_uid={client_uid})"
             )
-            self.notify_event(
-                "order",
-                self.format_order_notification(
-                    side="SELL",
-                    figi=figi,
-                    qty=int(fs.position_lots),
-                    price=float(price_f),
-                    cash=float(cash),
-                    free=float(free),
-                ),
-                throttle_sec=0,
-            )
-
             self.journal_event(
                 "SUBMIT",
                 figi,
@@ -910,6 +1013,7 @@ class Broker:
                 client_uid=client_uid,
                 status="NEW",
                 reason="limit_sell_to_close",
+                meta={"signal_reason": str(reason or "")},
             )
 
             return True
@@ -998,6 +1102,7 @@ class Broker:
                 avg_price = None
 
         side = "BUY" if "BUY" in direction else ("SELL" if "SELL" in direction else str(getattr(fs, "order_side", "") or ""))
+        order_reason = str(getattr(fs, "active_order_reason", "") or "")
 
         final_statuses = {
             "EXECUTION_REPORT_STATUS_FILL",
@@ -1007,6 +1112,10 @@ class Broker:
 
         if status in final_statuses:
             if status == "EXECUTION_REPORT_STATUS_FILL":
+                self.log(
+                    f"[FILL] {side} {self.format_instrument(figi)} lots={lots_executed} "
+                    f"price={avg_price if avg_price is not None else 'N/A'} reason={order_reason or 'filled'}"
+                )
                 self.journal_event(
                     "FILL",
                     figi,
@@ -1016,25 +1125,30 @@ class Broker:
                     order_id=oid,
                     client_uid=cuid,
                     status=status,
-                    reason="filled",
+                    reason=order_reason or "filled",
                 )
 
                 if side == "BUY":
                     self.state.trades_today += 1
-
-                self.notify_event(
-                    "fill",
-                    self.format_fill_notification(side=side, figi=figi, lots_executed=lots_executed, avg_price=avg_price),
-                    throttle_sec=0,
-                )
-
-                if side == "BUY":
                     if fs.entry_time is None:
                         fs.entry_time = now()
                     if fs.entry_price is None and avg_price is not None:
                         fs.entry_price = float(avg_price)
+                    self.notify_event(
+                        "fill",
+                        self.format_trade_fill_notification(
+                            side=side,
+                            figi=figi,
+                            lots_executed=lots_executed,
+                            avg_price=avg_price,
+                            reason=order_reason,
+                        ),
+                        throttle_sec=0,
+                    )
 
                 elif side == "SELL":
+                    pnl_abs = None
+                    pnl_pct = None
                     try:
                         entry = fs.entry_price
                         if entry is not None and avg_price is not None:
@@ -1043,19 +1157,22 @@ class Broker:
                             pnl_abs = (float(avg_price) - float(entry)) * float(lot_size) * qty_lots
                             pnl_pct = (float(avg_price) / float(entry) - 1.0) * 100.0
                             self.state.day_realized_pnl_rub += float(pnl_abs)
-                            self.notify_event(
-                                "pnl",
-                                self.format_pnl_notification(
-                                    figi=figi,
-                                    pnl_abs=float(pnl_abs),
-                                    pnl_pct=float(pnl_pct),
-                                    entry=float(entry),
-                                    exit_=float(avg_price),
-                                ),
-                                throttle_sec=0,
-                            )
                     except Exception:
                         pass
+
+                    self.notify_event(
+                        "fill",
+                        self.format_trade_fill_notification(
+                            side=side,
+                            figi=figi,
+                            lots_executed=lots_executed,
+                            avg_price=avg_price,
+                            reason=order_reason,
+                            pnl_abs=pnl_abs,
+                            pnl_pct=pnl_pct,
+                        ),
+                        throttle_sec=0,
+                    )
 
                     fs.entry_price = None
                     fs.entry_time = None
