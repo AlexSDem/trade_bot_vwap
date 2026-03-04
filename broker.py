@@ -100,6 +100,8 @@ class Broker:
         self.currency = cfg.get("currency", "rub")
         self.use_sandbox = bool(cfg.get("use_sandbox", True))
         self.class_code = cfg.get("class_code", "TQBR")
+        self.commission_pct = float(cfg.get("commission_pct", 0.04))
+        self.commission_rate = float(self.commission_pct) / 100.0
 
         self._retry_tries = int(cfg.get("retry_tries", 3))
         self._retry_sleep_min = float(cfg.get("retry_sleep_min", 1.0))
@@ -243,6 +245,7 @@ class Broker:
         reason: str = "",
         pnl_abs: Optional[float] = None,
         pnl_pct: Optional[float] = None,
+        commission_rub: Optional[float] = None,
     ) -> str:
         ticker = self._ticker_for_figi(figi) or figi
         px = "N/A" if avg_price is None else f"{float(avg_price):.4f}"
@@ -266,12 +269,16 @@ class Broker:
                     f"Причина: {reason_txt}"
                 )
             emj = self._emoji_for_pnl(float(pnl_abs))
+            comm_txt = ""
+            if commission_rub is not None:
+                comm_txt = f"\nКомиссия: {float(commission_rub):.2f} RUB"
             return (
                 f"{emj} SELL исполнен\n"
                 f"Тикер: {ticker}\n"
                 f"Лоты: {int(lots_executed)}\n"
                 f"Цена: {px}\n"
                 f"Результат: {float(pnl_abs):+.2f} RUB ({float(pnl_pct):+.2f}%)\n"
+                f"{comm_txt}\n"
                 f"Причина: {reason_txt}"
             )
 
@@ -408,6 +415,24 @@ class Broker:
             return float(quotation_to_decimal(x))
         except Exception:
             return 0.0
+
+    def _extract_commission_from_order_state(self, st: Any) -> float:
+        # API versions may expose different fields; prefer one total commission field.
+        for name in ("executed_commission", "service_commission", "initial_commission", "commission"):
+            v = getattr(st, name, None)
+            if v is None:
+                continue
+            c = float(self._to_float(v))
+            if abs(c) > 0:
+                return float(abs(c))
+        return 0.0
+
+    def _calc_fixed_commission_rub(self, figi: str, lots_executed: int, avg_price: Optional[float]) -> float:
+        if avg_price is None or int(lots_executed) <= 0:
+            return 0.0
+        lot_size = self._lot_size(figi)
+        turnover = float(avg_price) * float(lot_size) * float(int(lots_executed))
+        return float(abs(turnover) * float(self.commission_rate))
 
     # ---------- lot helpers ----------
     def _lot_size(self, figi: str) -> int:
@@ -1196,6 +1221,9 @@ class Broker:
                 avg_price = float(self._to_float(ap))
             except Exception:
                 avg_price = None
+        fill_commission = self._calc_fixed_commission_rub(figi, lots_executed, avg_price)
+        if fill_commission <= 0:
+            fill_commission = self._extract_commission_from_order_state(st)
 
         side = "BUY" if "BUY" in direction else ("SELL" if "SELL" in direction else str(getattr(fs, "order_side", "") or ""))
         order_reason = str(getattr(fs, "active_order_reason", "") or "")
@@ -1222,6 +1250,7 @@ class Broker:
                     client_uid=cuid,
                     status=status,
                     reason=order_reason or "filled",
+                    meta={"commission_rub": float(fill_commission)},
                 )
 
                 if side == "BUY":
@@ -1230,6 +1259,7 @@ class Broker:
                         fs.entry_time = now()
                     if fs.entry_price is None and avg_price is not None:
                         fs.entry_price = float(avg_price)
+                    fs.entry_commission_rub = float(getattr(fs, "entry_commission_rub", 0.0) or 0.0) + float(fill_commission)
                     self.notify_event(
                         "fill",
                         self.format_trade_fill_notification(
@@ -1238,6 +1268,7 @@ class Broker:
                             lots_executed=lots_executed,
                             avg_price=avg_price,
                             reason=order_reason,
+                            commission_rub=float(fill_commission),
                         ),
                         throttle_sec=0,
                     )
@@ -1245,14 +1276,22 @@ class Broker:
                 elif side == "SELL":
                     pnl_abs = None
                     pnl_pct = None
+                    pnl_gross = None
+                    total_commission = float(fill_commission)
                     try:
                         entry = fs.entry_price
                         if entry is not None and avg_price is not None:
                             lot_size = self._lot_size(figi)
                             qty_lots = float(lots_executed)
-                            pnl_abs = (float(avg_price) - float(entry)) * float(lot_size) * qty_lots
-                            pnl_pct = (float(avg_price) / float(entry) - 1.0) * 100.0
+                            pnl_gross = (float(avg_price) - float(entry)) * float(lot_size) * qty_lots
+                            total_commission += float(getattr(fs, "entry_commission_rub", 0.0) or 0.0)
+                            pnl_abs = float(pnl_gross) - float(total_commission)
+                            pnl_pct = (float(pnl_abs) / (float(entry) * float(lot_size) * qty_lots)) * 100.0
                             self.state.day_realized_pnl_rub += float(pnl_abs)
+                            self.log(
+                                f"[PNL] {self.format_instrument(figi)} gross={float(pnl_gross):+.2f} RUB "
+                                f"commission={float(total_commission):.2f} RUB net={float(pnl_abs):+.2f} RUB"
+                            )
                     except Exception:
                         pass
 
@@ -1266,12 +1305,14 @@ class Broker:
                             reason=order_reason,
                             pnl_abs=pnl_abs,
                             pnl_pct=pnl_pct,
+                            commission_rub=total_commission,
                         ),
                         throttle_sec=0,
                     )
 
                     fs.entry_price = None
                     fs.entry_time = None
+                    fs.entry_commission_rub = 0.0
 
             elif status == "EXECUTION_REPORT_STATUS_CANCELLED":
                 self.journal_event(

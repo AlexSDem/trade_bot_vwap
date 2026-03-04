@@ -20,6 +20,7 @@ class FigiState:
     # Для стратегии (тейк/стоп и т.п.)
     entry_price: Optional[float] = None
     entry_time: Optional[datetime] = None
+    entry_commission_rub: float = 0.0
 
 
 @dataclass
@@ -49,6 +50,7 @@ class BotState:
         fs = self.get(figi)
         fs.entry_price = None
         fs.entry_time = None
+        fs.entry_commission_rub = 0.0
 
     # NEW: clearing order meta in one place
     def clear_order(self, figi: str):
@@ -99,6 +101,7 @@ class BotState:
                     "position_lots": int(fs.position_lots),
                     "entry_price": fs.entry_price,
                     "entry_time": self._dt_to_iso(fs.entry_time),
+                    "entry_commission_rub": float(fs.entry_commission_rub),
                 }
                 for figi, fs in self.figi.items()
             },
@@ -120,3 +123,4 @@ class BotState:
             fs.position_lots = int(obj.get("position_lots", 0) or 0)
             fs.entry_price = obj.get("entry_price")
             fs.entry_time = self._dt_from_iso(obj.get("entry_time"))
+            fs.entry_commission_rub = float(obj.get("entry_commission_rub", 0.0) or 0.0)
