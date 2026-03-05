@@ -116,6 +116,35 @@ broker:
 - все действия пишутся в logs/bot.log
 - для штатной работы достаточно 15–20 минут контроля в день
 
+## Бэктест
+Бэктест работает по историческим 1m свечам из `data/history_1m/*.csv`.
+
+1) Сначала скачать историю:
+```text
+python download_history.py --config config.yaml --days 60 --out-dir data/history_1m
+```
+
+2) Запустить бэктест:
+```text
+python backtest.py --config config.yaml --data-dir data/history_1m --out-dir logs/backtest
+```
+
+Опционально:
+```text
+python backtest.py --initial-cash 200000 --lot-size-default 1
+```
+
+Результат:
+- `logs/backtest/summary.json` — агрегированные метрики
+- `logs/backtest/trades.csv` — события `SUBMIT/FILL/EXPIRE/FORCE_FLATTEN`
+- `logs/backtest/equity.csv` — кривая капитала по времени
+- `logs/backtest/report.txt` — человекочитаемое резюме
+
+Важно:
+- это офлайн-модель исполнения (limit-fill по OHLC), а не тиковый симулятор;
+- размер лота берётся как `lot-size-default` (приближение);
+- комиссии учитываются через `broker.commission_pct` из конфига.
+
 
 # Пояснения по файлам
 ## broker.py
