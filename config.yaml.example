@@ -8,8 +8,8 @@ broker:
   key_log_file: "logs/key_events.log"
   state_file: "logs/runtime_state.json"
   class_code: "TQBR"
-  buy_aggressive_ticks: 1
-  sell_aggressive_ticks: 1
+  buy_aggressive_ticks: 2
+  sell_aggressive_ticks: 2
   trades_csv: "logs/trades.csv"
 
   retry_tries: 3
@@ -60,7 +60,7 @@ runtime:
   error_sleep_sec: 10
   max_consecutive_errors: 8
   reports_dir: "logs/reports"
-  order_ttl_sec: 90
+  order_ttl_sec: 300
 
 telegram:
   enabled: true
@@ -76,5 +76,5 @@ telegram:
   send_errors: true
   send_service: true
   send_rejects: true
-  send_cancels: false
-  send_expires: false
+  send_cancels: true
+  send_expires: true

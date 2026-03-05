@@ -78,6 +78,7 @@ class Broker:
         self.trading_tz = trading_tz
 
         self._last_low_cash_warn: Dict[str, float] = {}
+        self._last_notify_error_warn: float = 0.0
         self._reserved_rub_by_figi: Dict[str, float] = {}
         self._journaled_fill_order_ids: set[str] = set()
 
@@ -142,9 +143,18 @@ class Broker:
         if not self.notifier:
             return
         try:
-            self.notifier.send(text, throttle_sec=throttle_sec)
-        except Exception:
-            pass
+            ok = bool(self.notifier.send(text, throttle_sec=throttle_sec))
+            if not ok:
+                now_ts = time.time()
+                # Do not flood logs when Telegram is unstable.
+                if now_ts - self._last_notify_error_warn >= 300:
+                    self._last_notify_error_warn = now_ts
+                    self.log("[WARN] Telegram send failed or skipped (check TG_BOT_TOKEN/TG_CHAT_ID/network)")
+        except Exception as e:
+            now_ts = time.time()
+            if now_ts - self._last_notify_error_warn >= 300:
+                self._last_notify_error_warn = now_ts
+                self.log(f"[WARN] Telegram send error: {e}")
 
     def _notify_enabled(self, category: str) -> bool:
         compact_mode = bool(self.notify_cfg.get("compact_mode", True))
@@ -1083,8 +1093,24 @@ class Broker:
             return False
 
     def place_limit_sell_to_close(self, account_id: str, figi: str, price: float, reason: str = "") -> bool:
+        # Refresh this figi snapshot right before SELL to reduce stale-position rejects.
+        self.refresh_account_snapshot(account_id, [figi])
         fs = self.state.get(figi)
         if int(fs.position_lots) <= 0:
+            msg = f"[SKIP] SELL {self.format_instrument(figi)}: no position to close"
+            self.log(msg)
+            self.journal_event(
+                "SKIP",
+                figi,
+                side="SELL",
+                lots=0,
+                price=float(price),
+                order_id=None,
+                client_uid=None,
+                status="NO_POSITION",
+                reason="sell_without_position_precheck",
+                meta={"signal_reason": str(reason or "")},
+            )
             return False
 
         if fs.active_order_id:

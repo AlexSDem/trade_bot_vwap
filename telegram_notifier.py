@@ -11,16 +11,16 @@ class TelegramNotifier:
         self.chat_id = chat_id
         self._last_sent = 0.0
 
-    def send(self, text: str, throttle_sec: float = 0.0):
+    def send(self, text: str, throttle_sec: float = 0.0) -> bool:
         """
         throttle_sec: чтобы не спамить (например, на ошибках)
         """
         if not self.enabled:
-            return
+            return False
 
         now = time.time()
         if throttle_sec > 0 and (now - self._last_sent) < throttle_sec:
-            return
+            return False
 
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"
         payload = {
@@ -33,9 +33,10 @@ class TelegramNotifier:
             r = requests.post(url, json=payload, timeout=10)
             r.raise_for_status()
             self._last_sent = now
+            return True
         except Exception:
-            # уведомления не должны валить бота
-            pass
+            # пусть caller решает, как логировать проблему
+            return False
 
 
 def notifier_from_env(enabled: bool = True) -> TelegramNotifier:
