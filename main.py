@@ -62,6 +62,7 @@ def main():
 
     # NEW: order TTL seconds (cancel if not filled)
     order_ttl_sec = int(cfg.get("runtime", {}).get("order_ttl_sec", 120))  # 2 minutes default
+    order_reprice_sec = int(cfg.get("runtime", {}).get("order_reprice_sec", 90))
 
     with Client(token) as client:
         broker = Broker(
@@ -262,11 +263,14 @@ def main():
                 broker.refresh_account_snapshot(account_id, figis)
 
                 for figi in figis:
-                    # 0) expire stale orders first (free slots, keep bot "simple flow")
-                    broker.expire_stale_orders(account_id, figi, ttl_sec=order_ttl_sec)
-
-                    # 1) order status updates
+                    # 0) try to read final status first
                     broker.poll_order_updates(account_id, figi)
+
+                    # 1) move stale working orders closer to market before hard TTL expiry
+                    broker.reprice_stale_order(account_id, figi, reprice_sec=order_reprice_sec)
+
+                    # 2) hard stop for too-old orders
+                    broker.expire_stale_orders(account_id, figi, ttl_sec=order_ttl_sec)
 
                     # candles
                     candles = broker.get_last_candles_1m(figi, lookback_minutes=cfg["strategy"]["lookback_minutes"])

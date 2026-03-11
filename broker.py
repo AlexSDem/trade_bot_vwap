@@ -946,6 +946,88 @@ class Broker:
         s = str(e).upper()
         return ("NOT_FOUND" in s) or ("ORDER NOT FOUND" in s)
 
+    def _recover_missing_fill_from_snapshot(
+        self,
+        figi: str,
+        order_side: str,
+        order_id: str,
+        client_uid: str,
+        order_reason: str,
+    ) -> bool:
+        fs = self.state.get(figi)
+        side = str(order_side or "").upper()
+        lots = int(getattr(fs, "position_lots", 0) or 0)
+        if side == "BUY" and lots > 0:
+            self.log(
+                f"[RECOVER] BUY fill inferred from position snapshot {self.format_instrument(figi)} "
+                f"lots={lots} order_id={order_id}"
+            )
+            self.journal_event(
+                "FILL",
+                figi,
+                side="BUY",
+                lots=lots,
+                price=fs.entry_price,
+                order_id=order_id,
+                client_uid=client_uid,
+                status="RECOVERED_FROM_SNAPSHOT",
+                reason=order_reason or "filled_after_not_found",
+                meta={"recovered": True},
+            )
+            if fs.entry_time is None:
+                fs.entry_time = now()
+            self.notify_event(
+                "fill",
+                self.format_trade_fill_notification(
+                    side="BUY",
+                    figi=figi,
+                    lots_executed=lots,
+                    avg_price=fs.entry_price,
+                    reason=order_reason or "filled_after_not_found",
+                    commission_rub=float(getattr(fs, "entry_commission_rub", 0.0) or 0.0),
+                ),
+                throttle_sec=0,
+            )
+            return True
+
+        if side == "SELL" and lots == 0:
+            self.log(
+                f"[RECOVER] SELL fill inferred from position snapshot {self.format_instrument(figi)} "
+                f"order_id={order_id}"
+            )
+            self.journal_event(
+                "FILL",
+                figi,
+                side="SELL",
+                lots=1,
+                price=None,
+                order_id=order_id,
+                client_uid=client_uid,
+                status="RECOVERED_FROM_SNAPSHOT",
+                reason=order_reason or "filled_after_not_found",
+                meta={"recovered": True},
+            )
+            self.notify_event(
+                "fill",
+                self.format_trade_fill_notification(
+                    side="SELL",
+                    figi=figi,
+                    lots_executed=1,
+                    avg_price=None,
+                    reason=order_reason or "filled_after_not_found",
+                    pnl_abs=None,
+                    pnl_pct=None,
+                    commission_rub=0.0,
+                ),
+                throttle_sec=0,
+            )
+            fs.entry_price = None
+            fs.entry_time = None
+            fs.entry_commission_rub = 0.0
+            return True
+
+        return False
+
     def cancel_active_order(self, account_id: str, figi: str, reason: str = "cancel_active_order") -> bool:
         fs = self.state.get(figi)
         if not fs.active_order_id:
@@ -953,6 +1035,8 @@ class Broker:
 
         oid = fs.active_order_id
         cuid = fs.client_order_uid or ""
+        side = str(getattr(fs, "order_side", "") or "")
+        order_reason = str(getattr(fs, "active_order_reason", "") or "")
 
         try:
             self._call(self._order_cancel_call(), account_id=account_id, order_id=oid)
@@ -976,6 +1060,8 @@ class Broker:
         except Exception as e:
             if self._is_not_found_error(e):
                 self.log(f"[CANCEL] {self.format_instrument(figi)} order_id={oid} already gone (NOT_FOUND)")
+                self.refresh_account_snapshot(account_id, [figi])
+                self._recover_missing_fill_from_snapshot(figi, side, oid, cuid, order_reason)
                 self.state.clear_order(figi)
                 self._reserved_rub_by_figi.pop(figi, None)
                 return True
@@ -1204,6 +1290,51 @@ class Broker:
         self.cancel_active_order(account_id, figi, reason="ttl_expired")
         return True
 
+    def reprice_stale_order(self, account_id: str, figi: str, reprice_sec: int) -> bool:
+        fs = self.state.get(figi)
+        if reprice_sec <= 0 or not fs.active_order_id or not fs.order_placed_ts:
+            return False
+
+        age = (now() - fs.order_placed_ts).total_seconds()
+        if age < float(reprice_sec):
+            return False
+
+        side = str(getattr(fs, "order_side", "") or "").upper()
+        reason = str(getattr(fs, "active_order_reason", "") or "")
+        last_price = self.get_last_price(figi)
+        if last_price is None:
+            return False
+
+        inst = self.format_instrument(figi)
+        self.log(
+            f"[REPRICE] {inst} side={side} order_id={fs.active_order_id} age={age:.0f}s "
+            f"-> replace near market"
+        )
+        self.journal_event(
+            "REPRICE",
+            figi,
+            side=side,
+            lots=int(getattr(fs, "position_lots", 0) or 0) if side == "SELL" else 1,
+            price=float(last_price),
+            order_id=fs.active_order_id,
+            client_uid=fs.client_order_uid,
+            status="REPRICE",
+            reason=reason or "reprice_stale_order",
+            meta={"age_sec": float(age), "reprice_sec": int(reprice_sec)},
+        )
+
+        if side == "BUY":
+            if not self.cancel_active_order(account_id, figi, reason="reprice_replace_buy"):
+                return False
+            return self.place_limit_buy(account_id, figi, float(last_price), reason=reason)
+
+        if side == "SELL":
+            if not self.cancel_active_order(account_id, figi, reason="reprice_replace_sell"):
+                return False
+            return self.place_limit_sell_to_close(account_id, figi, float(last_price), reason=reason)
+
+        return False
+
     # ---------- order state polling ----------
     def poll_order_updates(self, account_id: str, figi: str):
         fs = self.state.get(figi)
@@ -1218,6 +1349,11 @@ class Broker:
         except Exception as e:
             if self._is_not_found_error(e):
                 self.log(f"[STATE] {self.format_instrument(figi)} order_id={oid} not found -> clearing local state")
+                self.refresh_account_snapshot(account_id, [figi])
+                if self._recover_missing_fill_from_snapshot(figi, getattr(fs, "order_side", ""), oid, cuid, getattr(fs, "active_order_reason", "")):
+                    self.state.clear_order(figi)
+                    self._reserved_rub_by_figi.pop(figi, None)
+                    return
                 self.journal_event(
                     "STATE_LOST",
                     figi,

@@ -60,6 +60,7 @@ runtime:
   error_sleep_sec: 10
   max_consecutive_errors: 8
   reports_dir: "logs/reports"
+  order_reprice_sec: 90
   order_ttl_sec: 300
 
 telegram:
