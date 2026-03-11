@@ -1,6 +1,7 @@
 import os
 import time
 import yaml
+import fcntl
 from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -42,6 +43,36 @@ def save_daily_report(report_text: str, report_day_local, cfg: dict) -> str:
     return str(out_path)
 
 
+class SingleInstanceLock:
+    def __init__(self, path: str):
+        self.path = path
+        self._fh = None
+
+    def __enter__(self):
+        Path(self.path).parent.mkdir(parents=True, exist_ok=True)
+        self._fh = open(self.path, "a+", encoding="utf-8")
+        try:
+            fcntl.flock(self._fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as e:
+            raise RuntimeError(f"Another bot instance is already running (lock: {self.path})") from e
+        self._fh.seek(0)
+        self._fh.truncate()
+        self._fh.write(str(os.getpid()))
+        self._fh.flush()
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        if self._fh is None:
+            return
+        try:
+            self._fh.seek(0)
+            self._fh.truncate()
+            fcntl.flock(self._fh.fileno(), fcntl.LOCK_UN)
+        finally:
+            self._fh.close()
+            self._fh = None
+
+
 def main():
     cfg = load_config()
     token = get_token()
@@ -63,8 +94,9 @@ def main():
     # NEW: order TTL seconds (cancel if not filled)
     order_ttl_sec = int(cfg.get("runtime", {}).get("order_ttl_sec", 120))  # 2 minutes default
     order_reprice_sec = int(cfg.get("runtime", {}).get("order_reprice_sec", 90))
+    instance_lock_path = cfg.get("runtime", {}).get("instance_lock_file", "logs/bot.lock")
 
-    with Client(token) as client:
+    with SingleInstanceLock(instance_lock_path), Client(token) as client:
         broker = Broker(
             client,
             cfg["broker"],
@@ -387,4 +419,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except RuntimeError as e:
+        print(str(e))

@@ -149,7 +149,8 @@ class Broker:
                 # Do not flood logs when Telegram is unstable.
                 if now_ts - self._last_notify_error_warn >= 300:
                     self._last_notify_error_warn = now_ts
-                    self.log("[WARN] Telegram send failed or skipped (check TG_BOT_TOKEN/TG_CHAT_ID/network)")
+                    detail = getattr(self.notifier, "last_error", "") or "unknown"
+                    self.log(f"[WARN] Telegram send failed or skipped: {detail}")
         except Exception as e:
             now_ts = time.time()
             if now_ts - self._last_notify_error_warn >= 300:
@@ -276,6 +277,7 @@ class Broker:
                     f"Тикер: {ticker}\n"
                     f"Лоты: {int(lots_executed)}\n"
                     f"Цена: {px}\n"
+                    "Результат: недоступен (нет цены исполнения)\n"
                     f"Причина: {reason_txt}"
                 )
             emj = self._emoji_for_pnl(float(pnl_abs))
@@ -293,6 +295,17 @@ class Broker:
             )
 
         return f"⚪ Сделка исполнена\nТикер: {ticker}\nЛоты: {int(lots_executed)}\nЦена: {px}\nПричина: {reason_txt}"
+
+    def format_cancel_notification(self, figi: str, order_id: str, reason: str, status: str = "CANCELLED") -> str:
+        ticker = self._ticker_for_figi(figi) or figi
+        reason_txt = reason or "n/a"
+        return (
+            "🟡 Заявка отменена\n"
+            f"Тикер: {ticker}\n"
+            f"Order ID: {order_id}\n"
+            f"Статус: {status}\n"
+            f"Причина: {reason_txt}"
+        )
 
     def format_pnl_notification(self, figi: str, pnl_abs: float, pnl_pct: float, entry: float, exit_: float) -> str:
         ticker = self._ticker_for_figi(figi) or figi
@@ -487,6 +500,47 @@ class Broker:
                         self._journaled_fill_order_ids.add(oid)
         except Exception:
             pass
+
+    def _find_operation_fill(
+        self,
+        account_id: str,
+        figi: str,
+        order_id: str,
+        side: str,
+        lookback_minutes: int = 180,
+    ) -> Optional[dict]:
+        from_ = now() - timedelta(minutes=int(max(5, lookback_minutes)))
+        to_ = now()
+        side_upper = str(side or "").upper()
+
+        try:
+            resp = self._call(self._operations_call(), account_id=account_id, from_=from_, to=to_)
+            operations = getattr(resp, "operations", []) or []
+        except Exception:
+            return None
+
+        for op in operations:
+            if str(getattr(op, "figi", "") or "") != figi:
+                continue
+
+            op_type = str(getattr(op, "operation_type", "") or "").upper()
+            if side_upper and side_upper not in op_type:
+                continue
+
+            parent_id = str(getattr(op, "parent_operation_id", "") or "")
+            op_id = str(getattr(op, "id", "") or "")
+            if order_id not in {parent_id, op_id}:
+                continue
+
+            qty = int(abs(self._to_float(getattr(op, "quantity", 0))))
+            if qty <= 0:
+                continue
+
+            price_obj = getattr(op, "price", None)
+            price = float(self._to_float(price_obj)) if price_obj is not None else None
+            return {"lots": qty, "price": price, "source": "operations_api", "op_id": op_id}
+
+        return None
 
     def save_runtime_state(self):
         payload = {
@@ -948,6 +1002,7 @@ class Broker:
 
     def _recover_missing_fill_from_snapshot(
         self,
+        account_id: str,
         figi: str,
         order_side: str,
         order_id: str,
@@ -956,68 +1011,101 @@ class Broker:
     ) -> bool:
         fs = self.state.get(figi)
         side = str(order_side or "").upper()
-        lots = int(getattr(fs, "position_lots", 0) or 0)
-        if side == "BUY" and lots > 0:
+        snapshot_lots = int(getattr(fs, "position_lots", 0) or 0)
+        requested_lots = int(getattr(fs, "active_order_lots", 0) or 0)
+        op_fill = self._find_operation_fill(account_id, figi, order_id, side)
+
+        if side == "BUY" and snapshot_lots > 0:
+            fill_lots = int(op_fill["lots"]) if op_fill else max(1, requested_lots or min(snapshot_lots, 1))
+            fill_price = op_fill["price"] if op_fill else fs.entry_price
+            fill_commission = self._calc_fixed_commission_rub(figi, fill_lots, fill_price)
             self.log(
                 f"[RECOVER] BUY fill inferred from position snapshot {self.format_instrument(figi)} "
-                f"lots={lots} order_id={order_id}"
+                f"lots={fill_lots} price={fill_price if fill_price is not None else 'N/A'} order_id={order_id}"
             )
             self.journal_event(
                 "FILL",
                 figi,
                 side="BUY",
-                lots=lots,
-                price=fs.entry_price,
+                lots=fill_lots,
+                price=fill_price,
                 order_id=order_id,
                 client_uid=client_uid,
                 status="RECOVERED_FROM_SNAPSHOT",
                 reason=order_reason or "filled_after_not_found",
-                meta={"recovered": True},
+                meta={
+                    "recovered": True,
+                    "source": op_fill["source"] if op_fill else "snapshot_only",
+                    "commission_rub": float(fill_commission),
+                },
             )
             if fs.entry_time is None:
                 fs.entry_time = now()
+            if fs.entry_price is None and fill_price is not None:
+                fs.entry_price = float(fill_price)
+            fs.entry_commission_rub = float(getattr(fs, "entry_commission_rub", 0.0) or 0.0) + float(fill_commission)
             self.notify_event(
                 "fill",
                 self.format_trade_fill_notification(
                     side="BUY",
                     figi=figi,
-                    lots_executed=lots,
-                    avg_price=fs.entry_price,
+                    lots_executed=fill_lots,
+                    avg_price=fill_price,
                     reason=order_reason or "filled_after_not_found",
-                    commission_rub=float(getattr(fs, "entry_commission_rub", 0.0) or 0.0),
+                    commission_rub=float(fill_commission),
                 ),
                 throttle_sec=0,
             )
             return True
 
-        if side == "SELL" and lots == 0:
+        if side == "SELL" and snapshot_lots == 0:
+            fill_lots = int(op_fill["lots"]) if op_fill else max(1, requested_lots)
+            fill_price = op_fill["price"] if op_fill else None
+            fill_commission = self._calc_fixed_commission_rub(figi, fill_lots, fill_price)
+            entry = fs.entry_price
+            total_commission = float(fill_commission) + float(getattr(fs, "entry_commission_rub", 0.0) or 0.0)
+            pnl_abs = None
+            pnl_pct = None
+            if entry is not None and fill_price is not None:
+                lot_size = self._lot_size(figi)
+                gross = (float(fill_price) - float(entry)) * float(lot_size) * float(fill_lots)
+                pnl_abs = float(gross) - float(total_commission)
+                base = float(entry) * float(lot_size) * float(fill_lots)
+                if base > 0:
+                    pnl_pct = (float(pnl_abs) / base) * 100.0
+                self.state.day_realized_pnl_rub += float(pnl_abs)
+
             self.log(
                 f"[RECOVER] SELL fill inferred from position snapshot {self.format_instrument(figi)} "
-                f"order_id={order_id}"
+                f"lots={fill_lots} price={fill_price if fill_price is not None else 'N/A'} order_id={order_id}"
             )
             self.journal_event(
                 "FILL",
                 figi,
                 side="SELL",
-                lots=1,
-                price=None,
+                lots=fill_lots,
+                price=fill_price,
                 order_id=order_id,
                 client_uid=client_uid,
                 status="RECOVERED_FROM_SNAPSHOT",
                 reason=order_reason or "filled_after_not_found",
-                meta={"recovered": True},
+                meta={
+                    "recovered": True,
+                    "source": op_fill["source"] if op_fill else "snapshot_only",
+                    "commission_rub": float(fill_commission),
+                },
             )
             self.notify_event(
                 "fill",
                 self.format_trade_fill_notification(
                     side="SELL",
                     figi=figi,
-                    lots_executed=1,
-                    avg_price=None,
+                    lots_executed=fill_lots,
+                    avg_price=fill_price,
                     reason=order_reason or "filled_after_not_found",
-                    pnl_abs=None,
-                    pnl_pct=None,
-                    commission_rub=0.0,
+                    pnl_abs=pnl_abs,
+                    pnl_pct=pnl_pct,
+                    commission_rub=total_commission,
                 ),
                 throttle_sec=0,
             )
@@ -1040,8 +1128,7 @@ class Broker:
 
         try:
             self._call(self._order_cancel_call(), account_id=account_id, order_id=oid)
-            self.log(f"[CANCEL] {self.format_instrument(figi)} order_id={oid}")
-            self.notify_event("cancel", f"[CANCEL] {self._ticker_for_figi(figi) or figi} order_id={oid}", throttle_sec=0)
+            self.log(f"[CANCEL] {self.format_instrument(figi)} order_id={oid} reason={reason}")
 
             self.journal_event(
                 "CANCEL",
@@ -1054,14 +1141,19 @@ class Broker:
                 status="CANCELLED",
                 reason=reason,
             )
+            self.notify_event(
+                "cancel",
+                self.format_cancel_notification(figi, oid, reason=reason, status="CANCELLED"),
+                throttle_sec=0,
+            )
             self.state.clear_order(figi)
             self._reserved_rub_by_figi.pop(figi, None)
             return True
         except Exception as e:
             if self._is_not_found_error(e):
-                self.log(f"[CANCEL] {self.format_instrument(figi)} order_id={oid} already gone (NOT_FOUND)")
+                self.log(f"[CANCEL] {self.format_instrument(figi)} order_id={oid} already gone (NOT_FOUND) reason={reason}")
                 self.refresh_account_snapshot(account_id, [figi])
-                self._recover_missing_fill_from_snapshot(figi, side, oid, cuid, order_reason)
+                self._recover_missing_fill_from_snapshot(account_id, figi, side, oid, cuid, order_reason)
                 self.state.clear_order(figi)
                 self._reserved_rub_by_figi.pop(figi, None)
                 return True
@@ -1140,6 +1232,7 @@ class Broker:
 
             fs.client_order_uid = client_uid
             fs.active_order_id = r.order_id
+            fs.active_order_lots = int(quantity_lots)
             fs.order_side = "BUY"
             fs.order_placed_ts = now()
             fs.active_order_reason = str(reason or "")
@@ -1223,6 +1316,7 @@ class Broker:
 
             fs.client_order_uid = client_uid
             fs.active_order_id = r.order_id
+            fs.active_order_lots = int(fs.position_lots)
             fs.order_side = "SELL"
             fs.order_placed_ts = now()
             fs.active_order_reason = str(reason or "")
@@ -1350,7 +1444,14 @@ class Broker:
             if self._is_not_found_error(e):
                 self.log(f"[STATE] {self.format_instrument(figi)} order_id={oid} not found -> clearing local state")
                 self.refresh_account_snapshot(account_id, [figi])
-                if self._recover_missing_fill_from_snapshot(figi, getattr(fs, "order_side", ""), oid, cuid, getattr(fs, "active_order_reason", "")):
+                if self._recover_missing_fill_from_snapshot(
+                    account_id,
+                    figi,
+                    getattr(fs, "order_side", ""),
+                    oid,
+                    cuid,
+                    getattr(fs, "active_order_reason", ""),
+                ):
                     self.state.clear_order(figi)
                     self._reserved_rub_by_figi.pop(figi, None)
                     return
@@ -1488,7 +1589,11 @@ class Broker:
                     status=status,
                     reason="cancelled_by_api",
                 )
-                self.notify_event("cancel", f"[CANCELLED] {self._ticker_for_figi(figi) or figi}", throttle_sec=0)
+                self.notify_event(
+                    "cancel",
+                    self.format_cancel_notification(figi, oid, reason=order_reason or "cancelled_by_api", status=status),
+                    throttle_sec=0,
+                )
 
             elif status == "EXECUTION_REPORT_STATUS_REJECTED":
                 self.journal_event(

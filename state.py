@@ -8,6 +8,7 @@ from typing import Optional, Dict
 class FigiState:
     active_order_id: Optional[str] = None       # биржевой order_id (ответ API)
     client_order_uid: Optional[str] = None      # наш idempotency key
+    active_order_lots: Optional[int] = None     # requested lots for current active order
 
     # NEW: чтобы понимать что за ордер висит и когда поставили (TTL)
     order_side: Optional[str] = None            # "BUY" / "SELL"
@@ -57,6 +58,7 @@ class BotState:
         fs = self.get(figi)
         fs.active_order_id = None
         fs.client_order_uid = None
+        fs.active_order_lots = None
         fs.order_side = None
         fs.order_placed_ts = None
         fs.active_order_reason = None
@@ -95,6 +97,7 @@ class BotState:
                 figi: {
                     "active_order_id": fs.active_order_id,
                     "client_order_uid": fs.client_order_uid,
+                    "active_order_lots": fs.active_order_lots,
                     "order_side": fs.order_side,
                     "order_placed_ts": self._dt_to_iso(fs.order_placed_ts),
                     "active_order_reason": fs.active_order_reason,
@@ -117,6 +120,7 @@ class BotState:
             fs = self.get(figi)
             fs.active_order_id = obj.get("active_order_id")
             fs.client_order_uid = obj.get("client_order_uid")
+            fs.active_order_lots = obj.get("active_order_lots")
             fs.order_side = obj.get("order_side")
             fs.order_placed_ts = self._dt_from_iso(obj.get("order_placed_ts"))
             fs.active_order_reason = obj.get("active_order_reason")
